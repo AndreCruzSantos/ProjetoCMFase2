@@ -14,8 +14,12 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   useColorScheme,
   View,
+  Image,
+  Button,
+  TouchableOpacity
 } from 'react-native';
 
 import {
@@ -52,61 +56,127 @@ const Section = ({children, title}): Node => {
   );
 };
 
+function SignInScreen(){
+  return(
+    <View style={styles.background}>
+      <View style={styles.inputView}>
+        <Image source={require("./images/baseline_email_black_24dp.png")} style={styles.image}></Image>
+        <TextInput style = {styles.input} placeholder="Email"></TextInput>
+      </View>
+      <View style={styles.inputView}>
+        <Image source={require("./images/baseline_lock_black_24dp.png")} style={styles.image}></Image>
+        <TextInput style = {styles.input} placeholder="Password" secureTextEntry={true}></TextInput>
+      </View>
+      <Text style={styles.forgotPasswordTxt}>
+        Esqueceu-se da palavra-passe?
+      </Text>
+      <TouchableOpacity style={styles.signInBtn}>
+        <Text style={styles.signInText}>
+          Iniciar Sessão
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.registerBtn}>
+        <Text style={styles.signInText}>
+          Registar
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+function SignUpScreen(){
+  return(
+    <View style={styles.background}>
+      <View style={styles.inputView}>
+        <Image source={require("./images/baseline_person_black_24dp.png")} style={styles.image}></Image>
+        <TextInput style = {styles.input} placeholder="Nome de Utilizador"></TextInput>
+      </View>
+      <View style={styles.inputView}>
+        <Image source={require("./images/baseline_email_black_24dp.png")} style={styles.image}></Image>
+        <TextInput style = {styles.input} placeholder="Email"></TextInput>
+      </View>
+      <View style={styles.inputView}>
+        <Image source={require("./images/baseline_lock_black_24dp.png")} style={styles.image}></Image>
+        <TextInput style = {styles.input} placeholder="Password"></TextInput>
+      </View>
+      <View style={styles.inputView}>
+        <Image source={require("./images/baseline_lock_black_24dp.png")} style={styles.image}></Image>
+        <TextInput style = {styles.input} placeholder="Repetir Password"></TextInput>
+      </View>
+      <TouchableOpacity style={styles.signInBtn}>
+        <Text style={styles.signInText}>
+          Registe-se
+        </Text>
+      </TouchableOpacity><TouchableOpacity style={styles.registerBtn}>
+        <Text style={styles.signInText}>
+         Já tem conta?
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
 const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    SignInScreen()
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  background:{
+    flex: 1,
+    backgroundColor: '#C0C0C0',
+    alignItems: 'center',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  inputView: {
+    flexDirection: 'row',
+    width: '70%',
+    marginTop: 10,
+    backgroundColor: 'white',
+    borderRadius: 25,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  image:{
+    width:25,
+    height:25,
+    marginTop: 12,
+    marginLeft: 10
   },
-  highlight: {
-    fontWeight: '700',
+  input:{
+    flex:1,
+    paddingLeft: 7,
+    fontSize: 16
   },
+  signInBtn:{
+    width: '70%',
+    height: 40,
+    borderWidth: 1.5,
+    borderColor: '#009900',
+    backgroundColor: '#00CC66',
+    marginTop: 23,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  signInText:{
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+  forgotPasswordTxt:{
+    fontSize:13,
+    marginTop: 13,
+    marginRight: '15%'
+  },
+  registerBtn:{
+    width: '70%',
+    height: 40,
+    borderWidth: 1.5,
+    borderColor: '#009900',
+    backgroundColor: '#C0C0C0',
+    marginTop: 23,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });
 
 export default App;
