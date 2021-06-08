@@ -23,9 +23,6 @@ const App: () => Node = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Register">
-        <Stack.Screen name="Login" component={Login}/>
-        <Stack.Screen name="Register" component={Register}/>
-        <Stack.Screen name="Calendário" component={CalendarsScreen}></Stack.Screen>
         <Stack.Screen name="Criar Evento" component={CreateEvent}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
