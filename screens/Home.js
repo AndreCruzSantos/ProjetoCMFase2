@@ -1,25 +1,40 @@
 import React from 'react';
-import { View, Image, Text, Button, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Image, Text, Button, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import prompt from 'react-native-prompt-android';
 
 export default class CalendarsScreen extends React.Component {
+    promptCreateCalendar = () => {
+        prompt('Criar Calendário', 'Insira o nome do calendário a criar.', 
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'OK', onPress: password => console.log('OK Pressed'), style: 'ok'},
+            ],
+            {
+                type: 'plain-text',
+                cancelable: false,
+                placeholder: 'Escreva aqui...'
+            }
+        );
+    }
+
     render() {
         return (
             <ScrollView style={styles.scrollview}>
                 <View>
                     <View style={styles.category_btn}>
                         <Text style={styles.category}>Meus Calendários</Text>
-                        <TouchableOpacity>
-                            <Image style={styles.btnbig} source={require('../images/add.png')}></Image>
+                        <TouchableOpacity onPress={this.promptCreateCalendar}>
+                            <Image style={styles.btnbig} source={require('../images/add_orange.png')}></Image>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.item_btn}>
                         <Text style={styles.item}>Praia</Text>
                         <View style={styles.btns}>
                             <TouchableOpacity>
-                                <Image style={styles.btnsmall} source={require('../images/edit.png')}></Image>
+                                <Image style={styles.btnsmall} source={require('../images/edit_white.png')}></Image>
                             </TouchableOpacity>
                             <TouchableOpacity>
-                                <Image style={styles.btnsmall} source={require('../images/trash.png')}></Image>
+                                <Image style={styles.btnsmall} source={require('../images/trash_white.png')}></Image>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -27,45 +42,25 @@ export default class CalendarsScreen extends React.Component {
                         <Text style={styles.item}>Piscina</Text>
                         <View style={styles.btns}>
                             <TouchableOpacity>
-                                <Image style={styles.btnsmall} source={require('../images/edit.png')}></Image>
+                                <Image style={styles.btnsmall} source={require('../images/edit_white.png')}></Image>
                             </TouchableOpacity>
                             <TouchableOpacity>
-                                <Image style={styles.btnsmall} source={require('../images/trash.png')}></Image>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-                <View>
-                    <View style={styles.category_btn}>
-                        <Text style={styles.category}>Meus Calendários</Text>
-                        <TouchableOpacity>
-                            <Image style={styles.btnbig} source={require('../images/add.png')}></Image>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.item_btn}>
-                        <Text style={styles.item}>Praia</Text>
-                        <View style={styles.btns}>
-                            <TouchableOpacity>
-                                <Image style={styles.btnsmall} source={require('../images/edit.png')}></Image>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Image style={styles.btnsmall} source={require('../images/trash.png')}></Image>
+                                <Image style={styles.btnsmall} source={require('../images/trash_white.png')}></Image>
                             </TouchableOpacity>
                         </View>
                     </View>
                     <View style={styles.item_btn}>
-                        <Text style={styles.item}>Piscina</Text>
+                        <Text style={styles.item}>Volta ao Mundo</Text>
                         <View style={styles.btns}>
                             <TouchableOpacity>
-                                <Image style={styles.btnsmall} source={require('../images/edit.png')}></Image>
+                                <Image style={styles.btnsmall} source={require('../images/edit_white.png')}></Image>
                             </TouchableOpacity>
                             <TouchableOpacity>
-                                <Image style={styles.btnsmall} source={require('../images/trash.png')}></Image>
+                                <Image style={styles.btnsmall} source={require('../images/trash_white.png')}></Image>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </View>
-                
             </ScrollView>
         );
     }
@@ -73,18 +68,21 @@ export default class CalendarsScreen extends React.Component {
 
 var styles = {
     background: {
-        backgroundColor: '#65ff00',
-        flex: 1
+        
     },
     scrollview: {
+        backgroundColor: '#2B2A2A',
+        flex: 1
     },
     category: {
         fontSize: 30,
         fontWeight: 'bold',
+        color: '#FF8000',
         marginLeft: 10
     },
     item: {
         fontSize: 20,
+        color: '#FFFFFF',
         marginLeft: 10
     },
     btns: {

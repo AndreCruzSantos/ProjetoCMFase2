@@ -15,11 +15,11 @@ export default class Login extends React.Component{
             <View style={styles.background}>
           <Image source={require("../images/AgendYourself_Logo.png")} style={styles.logo}></Image>
           <View style={styles.inputView}>
-            <Image source={require("../images/baseline_email_black_24dp.png")} style={styles.image}></Image>
+            <Image source={require("../images/email.png")} style={styles.image}></Image>
             <TextInput style = {styles.input} placeholder="Email"></TextInput>
           </View>
           <View style={styles.inputView}>
-            <Image source={require("../images/baseline_lock_black_24dp.png")} style={styles.image}></Image>
+            <Image source={require("../images/lock.png")} style={styles.image}></Image>
             <TextInput style = {styles.input} placeholder="Password" secureTextEntry={true}></TextInput>
           </View>
           <Text style={styles.forgotPasswordTxt}>
