@@ -14,6 +14,7 @@ import { NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator} from '@react-navigation/stack';
 import CalendarsScreen from './screens/Home';
 import CreateEvent from './screens/create_event';
+import UserProfile from './screens/userProfile.js';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,10 @@ const App: () => Node = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Register">
         <Stack.Screen name="Criar Evento" component={CreateEvent}></Stack.Screen>
+        <Stack.Screen name="Login" component={Login}/>
+        <Stack.Screen name="Register" component={Register}/>
+        <Stack.Screen name="Calendário" component={CalendarsScreen}></Stack.Screen>
+        <Stack.Screen name="Perfil de Utilizador" component={UserProfile}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
