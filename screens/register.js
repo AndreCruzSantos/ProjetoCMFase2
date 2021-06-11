@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import {
   StyleSheet,
@@ -7,45 +9,51 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 
 export default class Register extends React.Component {
-    render(){
-      return (
-          <View style={styles.background}>
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <View style={styles.background}>
         <Image source={require("../images/AgendYourself_Logo.png")} style={styles.logo}></Image>
         <View style={styles.inputView}>
           <Image source={require("../images/baseline_person_black_24dp.png")} style={styles.image}></Image>
-          <TextInput style = {styles.input} placeholder="Nome de Utilizador"></TextInput>
+          <TextInput style={styles.input} placeholder="Nome de Utilizador"></TextInput>
         </View>
         <View style={styles.inputView}>
           <Image source={require("../images/baseline_email_black_24dp.png")} style={styles.image}></Image>
-          <TextInput style = {styles.input} placeholder="Email"></TextInput>
+          <TextInput style={styles.input} placeholder="Email"></TextInput>
         </View>
         <View style={styles.inputView}>
           <Image source={require("../images/baseline_lock_black_24dp.png")} style={styles.image}></Image>
-          <TextInput style = {styles.input} placeholder="Password"></TextInput>
+          <TextInput style={styles.input} placeholder="Password"></TextInput>
         </View>
         <View style={styles.inputView}>
           <Image source={require("../images/baseline_lock_black_24dp.png")} style={styles.image}></Image>
-          <TextInput style = {styles.input} placeholder="Repetir Password"></TextInput>
+          <TextInput style={styles.input} placeholder="Repetir Password"></TextInput>
         </View>
         <TouchableOpacity style={styles.signInBtn}>
           <Text style={styles.signInText}>
             Registe-se
           </Text>
-        </TouchableOpacity><TouchableOpacity style={styles.registerBtn}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.registerBtn}>
           <Text style={styles.registerTxt}>
-          Já tem conta?
+            Já tem conta?
           </Text>
         </TouchableOpacity>
       </View>
     );
-    }
+  }
 }
 
 const styles = StyleSheet.create({
-  background:{
+  background: {
     flex: 1,
     backgroundColor: '#2B2A2A',
     alignItems: 'center',
@@ -57,18 +65,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 25,
   },
-  image:{
-    width:25,
-    height:25,
+  image: {
+    width: 25,
+    height: 25,
     marginTop: 12,
     marginLeft: 10
   },
-  input:{
-    flex:1,
+  input: {
+    flex: 1,
     paddingLeft: 7,
     fontSize: 16
   },
-  signInBtn:{
+  signInBtn: {
     width: '70%',
     height: 40,
     borderWidth: 1.5,
@@ -78,18 +86,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  signInText:{
+  signInText: {
     fontSize: 17,
     fontWeight: 'bold',
     color: 'black'
   },
-  forgotPasswordTxt:{
-    fontSize:13,
+  forgotPasswordTxt: {
+    fontSize: 13,
     marginTop: 13,
     marginRight: '15%',
     color: 'white'
   },
-  registerBtn:{
+  registerBtn: {
     width: '70%',
     height: 40,
     borderWidth: 1.5,
@@ -100,11 +108,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  logo:{
-    width:230,
-    height:230
+  logo: {
+    width: 230,
+    height: 230
   },
-  registerTxt:{
+  registerTxt: {
     color: 'white',
     fontSize: 17,
     fontWeight: 'bold'

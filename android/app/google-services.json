@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "303668905085",
+    "project_id": "agendyourselfbd",
+    "storage_bucket": "agendyourselfbd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:303668905085:android:ed94470101e9de2ad29d14",
+        "android_client_info": {
+          "package_name": "com.projetocmfase2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "303668905085-07f1lcqkvo1gqo24jd4p33c3p5ngv84k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxdWpiRdhn2B_INeYWAqaS0K9awbJMyOM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "303668905085-07f1lcqkvo1gqo24jd4p33c3p5ngv84k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
