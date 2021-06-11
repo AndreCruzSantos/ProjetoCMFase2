@@ -38,6 +38,7 @@ const EventPage = ({ navigation }) => {
 
     const handleConfirm = (date) => {
         setTimeForNotif(date);
+        /*Dar update na base de dados para o novo tempo de notificação*/ 
         hideDatePicker();
     };
 
