@@ -110,7 +110,6 @@ export default class Calendar extends React.Component {
 
                 <Agenda
                     items={this.state.items}
-                    //loadItemsForMonth={this.loadTeste.bind(this)}
                     selected={'2021-06-10'}
                     renderItem={this.renderItem.bind(this)}
                     renderEmptyDate={this.renderEmptyDate.bind(this)}
@@ -121,21 +120,6 @@ export default class Calendar extends React.Component {
                         dotColor: 'black',
                         selectedDotColor: 'white'
                     }}
-
-                // markingType={'period'}
-                // markedDates={{
-                //    '2017-05-08': {textColor: '#43515c'},
-                //    '2017-05-09': {textColor: '#43515c'},
-                //    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
-                //    '2017-05-21': {startingDay: true, color: 'blue'},
-                //    '2017-05-22': {endingDay: true, color: 'gray'},
-                //    '2017-05-24': {startingDay: true, color: 'gray'},
-                //    '2017-05-25': {color: 'gray'},
-                //    '2017-05-26': {endingDay: true, color: 'gray'}}}
-                // monthFormat={'yyyy'}
-                // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
-                //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
-                // hideExtraDays={false}
                 />
 
                 <TouchableOpacity activeOpacity={0.7}

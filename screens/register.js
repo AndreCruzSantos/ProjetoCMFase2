@@ -48,9 +48,11 @@ export default class Register extends React.Component {
     if (name.length != 0 && mail.length != 0 && pass.length != 0 && repPass != 0) {
       if (pass == repPass) {
         firebase.database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
-          console.log(snapshot);
           if(!snapshot.exists()){
-            
+            firebase.auth().createUserWithEmailAndPassword(mail, pass).then(() => {
+              firebase.database().ref().child('users').child(name).set({'username': name, 'email': mail});
+              this.props.navigation.navigate('Login');
+            });
           }else{
             console.log('Existe');
           }
