@@ -12,30 +12,109 @@ import {
 } from 'react-native';
 
 import { Calendars, CalendarList, Agenda } from 'react-native-calendars';
+import firebase from '@react-native-firebase/app';
+import database from '@react-native-firebase/database';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 export default class Calendar extends React.Component {
 
     constructor(props) {
         super(props);
-
+        
         this.state = {
-            items: {}
-        };
+            items: {},
+            ref: null,
+            callB: null
+        }; 
+        
     }
 
+    
+
+    componentDidMount(){
+        const empty = {};
+        this.setState({
+            items: empty
+        });
+        console.log(this.state.items);
+        const ola = firebase.database().ref().child('events');
+        const teste = ola.on('value', snapshot => {
+            snapshot.forEach(snap => {
+                const key = snap.val().startDate;
+                if(!this.state.items[key]){
+                    this.state.items[key] = [];
+                    this.state.items[key].push({
+                        key: snap.key,
+                        title: snap.val().title,
+                        description: snap.val().description,
+                        location: snap.val().location,
+                        startDate: snap.val().startDate,
+                        endDate: snap.val().endDate
+                    });
+                }else{
+                    if(snap.val().startDate == key){
+   
+                                this.state.items[key].push({
+                                    key: snap.key,
+                                    title: snap.val().title,
+                                    description: snap.val().description,
+                                    location: snap.val().location,
+                                    startDate: snap.val().startDate,
+                                    endDate: snap.val().endDate
+                                });
+                            
+                    
+                        
+                    }
+                }
+                
+            });
+    
+            const newItems = {};
+            Object.keys(this.state.items).forEach(key => {
+                newItems[key] = this.state.items[key];
+            });
+            this.setState({
+                items: newItems,
+                ref: ola,
+                callB: teste,
+            });
+            //firebase.database().ref().child('events').off('value', teste);
+        });
+
+
+        
+    }
+
+    componentWillUnmount(){
+        const {ref,callB,items} = this.state;
+        ref.off('value', callB);
+        //items=null;
+    }
+
+    /*componentDidUpdate(){
+        const {ref,callB,items} = this.state;
+        this.state.items = {};
+        ref.off('value', callB);
+        
+    }*/
+
+    
+
     render() {
+        const {items} = this.state;
         return (
             <View style={{ flex: 1 }}>
 
 
                 <Agenda
                     items={this.state.items}
-                    loadItemsForMonth={this.loadItems.bind(this)}
-                    selected={'2017-05-16'}
+                    //loadItemsForMonth={this.loadTeste.bind(this)}
+                    selected={'2021-06-10'}
                     renderItem={this.renderItem.bind(this)}
                     renderEmptyDate={this.renderEmptyDate.bind(this)}
                     rowHasChanged={this.rowHasChanged.bind(this)}
-                    
                     
                     theme={{
                         selectedDayBackgroundColor: 'orange',
@@ -68,10 +147,13 @@ export default class Calendar extends React.Component {
             </View>
         );
     }
+
     loadItems(day) {
         setTimeout(() => {
             for (let i = -15; i < 85; i++) {
+                
                 const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+                
                 const strTime = this.timeToString(time);
                 if (!this.state.items[strTime]) {
                     this.state.items[strTime] = [];
@@ -94,13 +176,68 @@ export default class Calendar extends React.Component {
         }, 1000);
     }
 
+    
+    /*loadTeste() {
+        
+        const empty = {};
+        this.setState({
+            items: empty
+        });
+        console.log(this.state.items);
+        const ola = firebase.database().ref().child('events');
+        const teste = ola.on('value', snapshot => {
+            snapshot.forEach(snap => {
+                const key = snap.val().startDate;
+                if(!this.state.items[key]){
+                    this.state.items[key] = [];
+                    this.state.items[key].push({
+                        key: snap.key,
+                        title: snap.val().title,
+                        description: snap.val().description,
+                        location: snap.val().location,
+                        startDate: snap.val().startDate,
+                        endDate: snap.val().endDate
+                    });
+                }else{
+                    if(snap.val().startDate == key){
+   
+                                this.state.items[key].push({
+                                    key: snap.key,
+                                    title: snap.val().title,
+                                    description: snap.val().description,
+                                    location: snap.val().location,
+                                    startDate: snap.val().startDate,
+                                    endDate: snap.val().endDate
+                                });
+                            
+                    
+                        
+                    }
+                }
+                
+            });
+    
+            const newItems = {};
+            Object.keys(this.state.items).forEach(key => {
+                newItems[key] = this.state.items[key];
+            });
+            this.setState({
+                items: newItems,
+                ref: ola,
+                callB: teste,
+            });
+            //firebase.database().ref().child('events').off('value', teste);
+        });
+
+    }*/
+
     renderItem(item) {
         return (
             <TouchableOpacity
-                style={[styles.item, { height: item.height }]}
-                onPress={() => Alert.alert(item.name)}
+                style={[styles.item]}
+                onPress={() => Alert.alert(item.key)}
             >
-                <Text>{item.name}</Text>
+                <Text>{item.title}</Text>
             </TouchableOpacity>
         );
     }

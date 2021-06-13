@@ -17,6 +17,8 @@ import MomentPT from 'moment/src/locale/pt';
 import firebase from '@react-native-firebase/app';
 import database from '@react-native-firebase/database';
 
+
+
 class FloatingLabelInput extends Component {
   state = {
     isFocused: false,
@@ -109,13 +111,14 @@ export default class Teste extends React.Component {
 
   }
 
+
   createEvent = (title, desc, locat, sDate, eDate) => {
     if (title.length != 0 && desc.length != 0 && locat.length != 0) {
       firebase.database().ref().child('events').push().set({
         "title": title, "description": desc, "location": locat,
         "startDate": sDate, "endDate": eDate
       });
-      //navigation.navigate('Página Evento');
+      this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste'}]});
     } else {
       Alert.alert('Todos os campos têm de estar preenchidos.');
     }
@@ -248,7 +251,7 @@ export default class Teste extends React.Component {
 
         </View>
         <TouchableOpacity style={styles.dataView}
-          onPress={() => this.createEvent(value, description, location, startDate.toString(), endDate.toString())}>
+          onPress={() => this.createEvent(value, description, location, Moment(startDate).format('YYYY-MM-DD'), endDate.toString())}>
           <Text>Ola</Text>
         </TouchableOpacity>
       </View>

@@ -12,6 +12,7 @@ import {
 
 import firebase from '@react-native-firebase/app';
 import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
 
 var firebaseConfig = {
   apiKey: "AIzaSyAxdWpiRdhn2B_INeYWAqaS0K9awbJMyOM",
@@ -46,12 +47,14 @@ export default class Register extends React.Component {
   register = (name, mail, pass, repPass) => {
     if (name.length != 0 && mail.length != 0 && pass.length != 0 && repPass != 0) {
       if (pass == repPass) {
-        console.log(this.checkUsername(name));
-        if (!this.checkUsername(name)) {
-          if (!this.checkEmail(mail)) {
-            firebase.database().ref().child('users').child(name).set({ "username": name, "email": mail });
+        firebase.database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
+          console.log(snapshot);
+          if(!snapshot.exists()){
+            
+          }else{
+            console.log('Existe');
           }
-        }
+        });
       }
     }
   }
@@ -69,16 +72,6 @@ export default class Register extends React.Component {
     
   }
 
-  checkEmail = (mail) => {
-    firebase.database().ref().child('users').once('value').then(snapshot => {
-      snapshot.forEach(snap => {
-        if (snap.val().email == mail) {
-          return true;
-        }
-      });
-    });
-    return false;
-  }
 
   render() {
     const { username, email, password, repPassword } = this.state;
