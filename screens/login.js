@@ -9,6 +9,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import firebase from '@react-native-firebase/app';
+import database from '@react-native-firebase/database';
+
 export default class Login extends React.Component {
   constructor(props){
     super(props);
@@ -50,11 +53,11 @@ export default class Login extends React.Component {
       <View style={styles.background}>
         <Image source={require("../images/AgendYourself_Logo.png")} style={styles.logo}></Image>
         <View style={styles.inputView}>
-          <Image source={require("../images/baseline_email_black_24dp.png")} style={styles.image}></Image>
+          <Image source={require("../images/email.png")} style={styles.image}></Image>
           <TextInput style={styles.input} placeholder="Email" onChangeText={(mail) => {this.setState((prevState) => ({email : mail}))}}></TextInput>
         </View>
         <View style={styles.inputView}>
-          <Image source={require("../images/baseline_lock_black_24dp.png")} style={styles.image}></Image>
+          <Image source={require("../images/lock.png")} style={styles.image}></Image>
           <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={(pass) => {this.setState((prevState) => ({password : pass}))}}></TextInput>
         </View>
         <Text style={styles.forgotPasswordTxt} onPress={this.goToForgotPassword}>

@@ -1,53 +1,20 @@
 import React from "react";
 
 import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  Image,
-  TouchableOpacity,
-  ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+    Image,
+    TouchableOpacity,
+    ScrollView,
 } from 'react-native';
-
-export default class UserProfile extends React.Component{
-    render(){
-        return (
-                <View>
-                    <ScrollView showsHorizontalScrollIndicator={false}>
-                        <View style={styles.background}>
-                            <TouchableOpacity>
-                                <Image source={require('../images/back.png')} style={styles.back}></Image> {/* se não funcionar é pq não tinha a certeza de como tinham dado o nome a cena de voltar atras e nao sei dar pull XD */}
-                                <View></View>
-                                <View></View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.view1}>
-                            <Image source={require('../images/foto.png')} style={styles.profileImage}></Image>
-                            <Text style={styles.text1}>Diogo Rodrigues</Text>
-                            <Text style={styles.text2}>diogorodriguesfcp99@gmail.com</Text>
-                        </View>
-                        <View style={styles.resetView}>
-                            <Text style={styles.resetText}>Reset Password</Text>
-                        </View>
-                        <View style={styles.deleteView}>
-                            <Text style={styles.deleteText}>Delete Account</Text>
-                        </View>
-                        <View style={styles.logoutView}>
-                        <Text style={styles.logoutText}>Logout</Text>
-                        </View>
-                    </ScrollView>
-                </View>
-        );
-    }
-};
 
 const styles = StyleSheet.create({
     background: {
+        flex: 1,
         padding: 10,
-        width: '100',
-        backgroundColor: '#000',
-        height: 150
+        backgroundColor: '#2B2A2A',
     },
     back: {
         width: 30,
@@ -128,3 +95,29 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     }
 });
+
+export default class UserProfile extends React.Component {
+    render() {
+        return (
+            <View style={styles.background}>
+                <ScrollView showsHorizontalScrollIndicator={false}>
+                    <View style={styles.view1}>
+                        <Image source={require('../images/foto.png')} style={styles.profileImage}></Image>
+                        <Text style={styles.text1}>Diogo Rodrigues</Text>
+                        <Text style={styles.text2}>diogorodriguesfcp99@gmail.com</Text>
+                    </View>
+                    <View style={styles.resetView}>
+                        <Text style={styles.resetText}>Reset Password</Text>
+                    </View>
+                    <View style={styles.deleteView}>
+                        <Text style={styles.deleteText}>Delete Account</Text>
+                    </View>
+                    <View style={styles.logoutView}>
+                        <Text style={styles.logoutText}>Logout</Text>
+                    </View>
+                </ScrollView>
+            </View>
+        );
+    }
+};
+

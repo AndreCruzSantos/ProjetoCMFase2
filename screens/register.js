@@ -85,22 +85,22 @@ export default class Register extends React.Component {
       <View style={styles.background}>
         <Image source={require("../images/AgendYourself_Logo.png")} style={styles.logo}></Image>
         <View style={styles.inputView}>
-          <Image source={require("../images/baseline_person_black_24dp.png")} style={styles.image}></Image>
+          <Image source={require("../images/profile.png")} style={styles.image}></Image>
           <TextInput style={styles.input} placeholder="Nome de Utilizador"
             onChangeText={(name) => { this.setState((prevState) => ({ username: name })) }}></TextInput>
         </View>
         <View style={styles.inputView}>
-          <Image source={require("../images/baseline_email_black_24dp.png")} style={styles.image}></Image>
+          <Image source={require("../images/email.png")} style={styles.image}></Image>
           <TextInput style={styles.input} placeholder="Email"
             onChangeText={(mail) => { this.setState((prevState) => ({ email: mail })) }}></TextInput>
         </View>
         <View style={styles.inputView}>
-          <Image source={require("../images/baseline_lock_black_24dp.png")} style={styles.image}></Image>
+          <Image source={require("../images/lock.png")} style={styles.image}></Image>
           <TextInput style={styles.input} placeholder="Password"
             onChangeText={(pass) => { this.setState((prevState) => ({ password: pass })) }}></TextInput>
         </View>
         <View style={styles.inputView}>
-          <Image source={require("../images/baseline_lock_black_24dp.png")} style={styles.image}></Image>
+          <Image source={require("../images/lock.png")} style={styles.image}></Image>
           <TextInput style={styles.input} placeholder="Repetir Password"
             onChangeText={(passRep) => { this.setState((prevState) => ({ repPassword: passRep })) }}></TextInput>
         </View>

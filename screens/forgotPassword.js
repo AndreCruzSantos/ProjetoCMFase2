@@ -30,7 +30,7 @@ export default class ForgotPassword extends React.Component {
             <View style={styles.background}>
                 <Image source={require("../images/AgendYourself_Logo.png")} style={styles.logo}></Image>
                 <View style={styles.inputView}>
-                    <Image source={require("../images/baseline_email_black_24dp.png")} style={styles.image}></Image>
+                    <Image source={require("../images/email.png")} style={styles.image}></Image>
                     <TextInput style={styles.input} placeholder='Insira o seu email' onChangeText={(mail) => {this.setState((prevState) => ({email : mail}))}}></TextInput>
                 </View>
                 <TouchableOpacity style={styles.recoverPassword} onPress={() => this.forgotPassword(email)}>
