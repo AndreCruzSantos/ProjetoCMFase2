@@ -6,11 +6,17 @@ import {
   Animated,
   Switch,
   TouchableOpacity,
+  Image,
+  Alert
 } from 'react-native';
 
 import DateTimePicker from "react-native-modal-datetime-picker";
 import Moment from 'moment';
 import MomentPT from 'moment/src/locale/pt';
+
+import firebase from '@react-native-firebase/app';
+import database from '@react-native-firebase/database';
+
 
 
 class FloatingLabelInput extends Component {
@@ -19,14 +25,14 @@ class FloatingLabelInput extends Component {
   }
 
 
-  UNSAFE_componentWillMount(){
+  UNSAFE_componentWillMount() {
     this._animatedIsFocused = new Animated.Value(this.props.value === '' ? 0 : 1);
   }
 
   handleFocus = () => this.setState({ isFocused: true });
   handleBlur = () => this.setState({ isFocused: false });
 
-  componentDidUpdate(){
+  componentDidUpdate() {
     Animated.timing(this._animatedIsFocused, {
       toValue: (this.state.isFocused ? 1 : 0 || this.props.value !== '') ? 1 : 0,
       duration: 200,
@@ -42,190 +48,215 @@ class FloatingLabelInput extends Component {
       position: 'absolute',
       left: 0,
       top: this._animatedIsFocused.interpolate({
-        inputRange: [0,1],
-        outputRange: [18,0],
+        inputRange: [0, 1],
+        outputRange: [18, 0],
       }),
       fontSize: this._animatedIsFocused.interpolate({
-        inputRange: [0,1],
-        outputRange: [20,14],
+        inputRange: [0, 1],
+        outputRange: [20, 14],
       }),
       color: this._animatedIsFocused.interpolate({
-        inputRange: [0,1],
-        outputRange: ['#000','#000'],
+        inputRange: [0, 1],
+        outputRange: ['#000', '#000'],
       }),
     };
     return (
-      <View style={{ paddingTop: 18}}>
+      <View style={{ paddingTop: 18 }}>
         <Animated.Text style={labelStyle}>
           {label}
         </Animated.Text>
-        <TextInput 
+        <TextInput
           {...props}
           style={{ height: 39, fontSize: 15, color: '#000', borderBottomWidth: 1, borderBottomColor: '#555' }}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           blurOnSubmit
-          //onSubmitEditing={console.log(this.props.value)}
         />
 
-        
+
       </View>
     );
   }
 }
 
 var styles = {
-  
+
   switchView: {
-    marginLeft:20, 
-    flexDirection:'row', 
-    justifyContent:'space-between'
+    marginLeft: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   dataView: {
-    marginLeft:20, 
-    flexDirection:'row', 
-    justifyContent:'space-between'
+    marginLeft: '6%',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
 }
 
-const CreateEvent = () => {
-  
-  const state = {
-    value: '',
-    description: '',
-    location: '',
-    isEnabled: false,
-    startDate: new Date(),
-    isVisible: false,
-    endDate: new Date()
+export default class CreateEvent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      value: '',
+      description: '',
+      location: '',
+      isEnabled: false,
+      startDate: new Date(),
+      isVisible: false,
+      endDate: new Date(),
+      isEndVisible: false,
+    };
+
+
   }
-  
-  //Moment.defineLocale('pt', MomentPT);
-  
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
-  const [isEnabled, setEnabled] = useState(false);
-  const [value, handleTextChange] = useState('');
-  const [description, handleDescriptionChange] = useState('');
-  const [location, handleLocationChange] = useState('');
-  
-  const [startDate, setStartDate] = useState(new Date());
 
-  const [endDate, setEndDate] = useState(new Date());
-  
-  const toggleEnable = () => setEnabled(!isEnabled)
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
+  createEvent = (title, desc, locat, sDate, eDate) => {
+    if (title.length != 0 && desc.length != 0 && locat.length != 0) {
+      firebase.database().ref().child('events').push().set({
+        "title": title, "description": desc, "location": locat,
+        "startDate": sDate, "endDate": eDate
+      });
+      this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste'}]});
+    } else {
+      Alert.alert('Todos os campos têm de estar preenchidos.');
+    }
+  }
 
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
 
-  const showEndDatePicker = () => {
-    setEndDatePickerVisibility(true);
-  };
+  handlePicker = (datetime) => {
+    this.setState({
+      isVisible: false,
+      startDate: datetime
+    })
+  }
 
-  const hideEndDatePicker = () => {
-    setEndDatePickerVisibility(false);
-  };
+  handleEndPicker = (datetime) => {
+    this.setState({
+      isEndVisible: false,
+      endDate: datetime
+    })
+  }
 
-  const handleConfirm = (date) => {
-    setStartDate(date);
-    hideDatePicker();
-  };
-
-  const handleEndConfirm = (date) => {
-    setEndDate(date);
-    hideEndDatePicker();
-  };
-
-  const handleTitleChange = (newText) => handleTextChange(newText)
-  const handleDescriptionChangeText = (newText) => handleDescriptionChange(newText)
-  const handleLocationChangeText = (newText) => handleLocationChange(newText)
-  
-
+  render() {
+    const { value, description, location, isEnabled, startDate, isVisible, endDate, isEndVisible } = this.state;
     return (
-      
       <View>
 
         <View style={{ margin: 20 }}>
-          
+
           <FloatingLabelInput
             label="Título"
             value={value}
-            onChangeText={handleTitleChange}
-            
+            onChangeText={(title) => { this.setState((prevState) => ({ value: title })) }}
+
           />
+
 
           <FloatingLabelInput
             label="Descrição"
             value={description}
-            onChangeText={handleDescriptionChangeText}
+            onChangeText={(desc) => { this.setState((prevState) => ({ description: desc })) }}
           />
 
           <FloatingLabelInput
             label="Localização"
             value={location}
-            onChangeText={handleLocationChangeText}
+            onChangeText={(loc) => { this.setState((prevState) => ({ location: loc })) }}
           />
-        
+
         </View>
 
 
         <View style={styles.switchView}>
-          <Text style={{color:"#000", fontSize: 20}}>
+          <Text style={{ color: "#000", fontSize: 20 }}>
             O dia todo
-          </Text>
-          <Switch style={{marginEnd:'4%'}}
-            trackColor={{true: 'green', false:'grey'}}
-            onValueChange={toggleEnable}
+                    </Text>
+          <Switch style={{ marginEnd: '4%' }}
+            trackColor={{ true: 'green', false: 'grey' }}
+            onValueChange={(value) => this.setState({ isEnabled: value })}
             value={isEnabled}
           >
           </Switch>
         </View>
-        
 
-        <View style={{marginTop: 20}}>
-           <TouchableOpacity style={styles.dataView}
-           onPress={showDatePicker}>
-             <Text style={{color:"#000", fontSize: 20}}>Início </Text>
-             
-             <Text style={{color:"#000", fontSize: 15, marginEnd: '4%'}}> {Moment(startDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm' )}</Text>
-           </TouchableOpacity>
-            
-            <DateTimePicker
-              isVisible={isDatePickerVisible}
-              mode="datetime"
-              display="spinner"
-              onConfirm={handleConfirm}
-              onCancel={hideDatePicker}
-            />
 
-        </View>
+        <View style={{ marginTop: 20 }}>
+          <TouchableOpacity style={styles.dataView}
+            onPress={() => this.setState({ isVisible: !this.state.isVisible })}
+          >
 
-        <View style={{marginTop: 20}}>
-           <TouchableOpacity style={styles.dataView}
-           onPress={showEndDatePicker}>
-             <Text style={{color:"#000", fontSize: 20}}>Fim </Text>
-             
-             <Text style={{color:"#000", fontSize: 15, marginEnd: '4%'}}> {Moment(endDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm' )}</Text>
-           </TouchableOpacity>
-            
-            <DateTimePicker
-              isVisible={isEndDatePickerVisible}
-              mode="datetime"
-              display="spinner"
-              onConfirm={handleEndConfirm}
-              onCancel={hideEndDatePicker}
-            />
+            <Text style={{ color: "#000", fontSize: 20 }}>Início </Text>
+            {isEnabled ?
+              <View>
+                <Text style={{ color: "#000", fontSize: 15, marginEnd: '4%' }}> {Moment(startDate).format('DD ' + '' + 'MMMM')}</Text>
+                <DateTimePicker
+                  isVisible={isVisible}
+                  mode="date"
+                  display="spinner"
+                  onConfirm={this.handlePicker}
+                  onCancel={() => this.setState({ isVisible: false })}
+                />
+              </View>
+              :
+              <View>
+                <Text style={{ color: "#000", fontSize: 15, marginEnd: '4%' }}> {Moment(startDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm')}</Text>
+                <DateTimePicker
+                  isVisible={isVisible}
+                  mode="datetime"
+                  display="spinner"
+                  onConfirm={this.handlePicker}
+                  onCancel={() => this.setState({ isVisible: false })}
+                />
+              </View>
+            }
+
+          </TouchableOpacity>
 
         </View>
- 
+
+        <View style={{ marginTop: 20 }}>
+          <TouchableOpacity style={styles.dataView}
+            onPress={() => this.setState({ isEndVisible: !this.state.isEndVisible })}
+          >
+            <Text style={{ color: "#000", fontSize: 20 }}>Fim </Text>
+            {isEnabled ?
+              <View>
+                <Text style={{ color: "#000", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('DD ' + '' + 'MMMM')}</Text>
+                <DateTimePicker
+                  isVisible={isEndVisible}
+                  mode="date"
+                  display="spinner"
+                  onConfirm={this.handleEndPicker}
+                  onCancel={() => this.setState({ isEndVisible: false })}
+                />
+              </View>
+              :
+              <View>
+                <Text style={{ color: "#000", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm')}</Text>
+                <DateTimePicker
+                  isVisible={isEndVisible}
+                  mode="datetime"
+                  display="spinner"
+                  onConfirm={this.handleEndPicker}
+                  onCancel={() => this.setState({ isEndVisible: false })}
+                />
+              </View>
+            }
+
+          </TouchableOpacity>
+
+
+
+        </View>
+        <TouchableOpacity style={styles.dataView}
+          onPress={() => this.createEvent(value, description, location, Moment(startDate).format('YYYY-MM-DD'), endDate.toString())}>
+          <Text>Ola</Text>
+        </TouchableOpacity>
       </View>
+
     );
-  
+  }
 }
 
-export default CreateEvent;
