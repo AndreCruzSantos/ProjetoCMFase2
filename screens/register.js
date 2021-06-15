@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import {
   StyleSheet,
@@ -106,7 +108,8 @@ export default class Register extends React.Component {
           <Text style={styles.signInText}>
             Registe-se
           </Text>
-        </TouchableOpacity><TouchableOpacity style={styles.registerBtn}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.registerBtn}>
           <Text style={styles.registerTxt}>
             Já tem conta?
           </Text>

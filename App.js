@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-   
 import React from 'react';
 import type {Node} from 'react';
 import Login from "./screens/login.js"
@@ -18,11 +10,10 @@ import UserProfile from './screens/userProfile.js';
 import EventPage from './screens/event_page';
 import EditEvent from './screens/edit_event';
 import Calendar from './screens/calendar';
+import ForgotPassword from './screens/forgotPassword';
 
 
 const Stack = createStackNavigator();
-
-        
 
 const App: () => Node = () => {
   return (
@@ -36,6 +27,7 @@ const App: () => Node = () => {
         <Stack.Screen name="Calendário" component={CalendarsScreen}></Stack.Screen>
         <Stack.Screen name="Editar Evento" component={EditEvent}></Stack.Screen>
         <Stack.Screen name="Perfil de Utilizador" component={UserProfile}></Stack.Screen>
+        <Stack.Screen name="ForgotPassword" component={ForgotPassword}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
