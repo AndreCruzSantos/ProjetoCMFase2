@@ -93,7 +93,7 @@ var styles = {
   },
 }
 
-export default class Teste extends React.Component {
+export default class CreateEvent extends React.Component {
   constructor(props) {
     super(props);
 

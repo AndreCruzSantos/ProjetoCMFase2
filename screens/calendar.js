@@ -14,35 +14,35 @@ import {
 import { Calendars, CalendarList, Agenda } from 'react-native-calendars';
 import firebase from '@react-native-firebase/app';
 import database from '@react-native-firebase/database';
-import { useFocusEffect } from '@react-navigation/native';
+
 
 
 export default class Calendar extends React.Component {
 
     constructor(props) {
         super(props);
-        
+
         this.state = {
             items: {},
             ref: null,
             callB: null
-        }; 
-        
+        };
+
     }
 
-    
 
-    componentDidMount(){
+
+    componentDidMount() {
         const empty = {};
         this.setState({
             items: empty
         });
-        console.log(this.state.items);
+
         const ola = firebase.database().ref().child('events');
         const teste = ola.on('value', snapshot => {
             snapshot.forEach(snap => {
                 const key = snap.val().startDate;
-                if(!this.state.items[key]){
+                if (!this.state.items[key]) {
                     this.state.items[key] = [];
                     this.state.items[key].push({
                         key: snap.key,
@@ -52,25 +52,25 @@ export default class Calendar extends React.Component {
                         startDate: snap.val().startDate,
                         endDate: snap.val().endDate
                     });
-                }else{
-                    if(snap.val().startDate == key){
-   
-                                this.state.items[key].push({
-                                    key: snap.key,
-                                    title: snap.val().title,
-                                    description: snap.val().description,
-                                    location: snap.val().location,
-                                    startDate: snap.val().startDate,
-                                    endDate: snap.val().endDate
-                                });
-                            
-                    
-                        
+                } else {
+                    if (snap.val().startDate == key) {
+
+                        this.state.items[key].push({
+                            key: snap.key,
+                            title: snap.val().title,
+                            description: snap.val().description,
+                            location: snap.val().location,
+                            startDate: snap.val().startDate,
+                            endDate: snap.val().endDate
+                        });
+
+
+
                     }
                 }
-                
+
             });
-    
+
             const newItems = {};
             Object.keys(this.state.items).forEach(key => {
                 newItems[key] = this.state.items[key];
@@ -84,11 +84,11 @@ export default class Calendar extends React.Component {
         });
 
 
-        
+
     }
 
-    componentWillUnmount(){
-        const {ref,callB,items} = this.state;
+    componentWillUnmount() {
+        const { ref, callB, items } = this.state;
         ref.off('value', callB);
         //items=null;
     }
@@ -100,10 +100,10 @@ export default class Calendar extends React.Component {
         
     }*/
 
-    
+
 
     render() {
-        const {items} = this.state;
+        const { items } = this.state;
         return (
             <View style={{ flex: 1 }}>
 
@@ -114,7 +114,7 @@ export default class Calendar extends React.Component {
                     renderItem={this.renderItem.bind(this)}
                     renderEmptyDate={this.renderEmptyDate.bind(this)}
                     rowHasChanged={this.rowHasChanged.bind(this)}
-                    
+
                     theme={{
                         selectedDayBackgroundColor: 'orange',
                         dotColor: 'black',
@@ -135,9 +135,9 @@ export default class Calendar extends React.Component {
     loadItems(day) {
         setTimeout(() => {
             for (let i = -15; i < 85; i++) {
-                
+
                 const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-                
+
                 const strTime = this.timeToString(time);
                 if (!this.state.items[strTime]) {
                     this.state.items[strTime] = [];
@@ -160,7 +160,7 @@ export default class Calendar extends React.Component {
         }, 1000);
     }
 
-    
+
     /*loadTeste() {
         
         const empty = {};
@@ -219,7 +219,7 @@ export default class Calendar extends React.Component {
         return (
             <TouchableOpacity
                 style={[styles.item]}
-                onPress={() => Alert.alert(item.key)}
+                onPress={() => this.props.navigation.navigate('Página Evento', { eventKey: item.key })}
             >
                 <Text>{item.title}</Text>
             </TouchableOpacity>

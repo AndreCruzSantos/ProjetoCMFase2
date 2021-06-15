@@ -26,7 +26,7 @@ const Stack = createStackNavigator();
 const App: () => Node = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Register">
+      <Stack.Navigator initialRouteName="CalendárioTeste">
         <Stack.Screen name="CalendárioTeste" component={Calendar}></Stack.Screen>
         <Stack.Screen name="Criar Evento" component={CreateEvent}></Stack.Screen>
         <Stack.Screen name="Página Evento" component={EventPage}></Stack.Screen>
