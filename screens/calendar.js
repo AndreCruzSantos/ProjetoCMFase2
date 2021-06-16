@@ -25,7 +25,8 @@ export default class Calendar extends React.Component {
         this.state = {
             items: {},
             ref: null,
-            callB: null
+            callB: null,
+            calendarKey: props.route.params.calendarKey,
         };
 
     }
@@ -33,6 +34,7 @@ export default class Calendar extends React.Component {
 
 
     componentDidMount() {
+        console.log(this.state.calendarKey);
         const empty = {};
         this.setState({
             items: empty

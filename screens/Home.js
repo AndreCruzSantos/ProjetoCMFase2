@@ -50,12 +50,13 @@ export default class CalendarsScreen extends React.Component {
     }
 
     createCalendar = (title) => {
-        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').push().set({ 'title': title }).then((snapshot) => {
+        firebase.database().ref().child('users').child(this.state.username).child('calendars').push().set({ 'title': title }).then((snapshot) => {
             Alert.alert('Calendário criado com sucesso!');
-        });
+        }).then(this.getAllCalendars());
     }
 
     getAllCalendars = () => {
+        /*
         firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').once('value').then(snapshot => {
             const newArr = [];
             snapshot.forEach(snap => {
@@ -65,11 +66,25 @@ export default class CalendarsScreen extends React.Component {
             });
             this.setState({ calendarsArr: newArr });
             console.log(this.state.calendarsArr);
+        });*/
+
+        firebase.database().ref().child('users').child(this.state.username).child('calendars').once('value', snapshot => {
+            const newArr = [];
+            snapshot.forEach(snap => {
+                newArr.push({
+                    'title' : snap.val().title,
+                    'key' : snap.key,
+                }
+                );
+            });
+            this.setState({ calendarsArr: newArr });
         });
+            
+
     }
 
-    getAuthUsername = async () => {
-        await firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+    getAuthUsername = () => {
+        /*await firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
             if (snapshot.exists()) {
                 snapshot.forEach((snap) => {
                     this.setState({
@@ -79,14 +94,22 @@ export default class CalendarsScreen extends React.Component {
             }
         }).then(snap => {
             this.getAllCalendars();
-        }).then(this.setState({}));
+        }).then(this.setState({}));*/
+
+        firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+            if (snapshot.exists()) {
+                snapshot.forEach((snap) => {
+                    this.setState({
+                        username: snap.key
+                    });
+                });
+            }
+            this.getAllCalendars();
+        });
     }
 
     render() {
         const array = this.state.calendarsArr;
-        array.forEach((elem) => {
-            console.log("o elemento é " + elem);
-        });
         return (
             <ScrollView style={styles.scrollview}>
                 <View style={styles.calendarType}>
@@ -98,8 +121,10 @@ export default class CalendarsScreen extends React.Component {
                     </View>
                     {
                         array.map(elem => {
+                            return(
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key } )}>    
                             <View style={styles.item_btn}>
-                                <Text style={styles.item}>{elem}</Text>
+                                <Text style={styles.item}>{elem.title}</Text>
                                 <View style={styles.btns}>
                                     <TouchableOpacity>
                                         <Image style={styles.btnsmall} source={require('../images/edit_grey.png')}></Image>
@@ -109,6 +134,8 @@ export default class CalendarsScreen extends React.Component {
                                     </TouchableOpacity>
                                 </View>
                             </View>
+                            </TouchableOpacity>
+                            )
                         })
                     }
                 </View>
