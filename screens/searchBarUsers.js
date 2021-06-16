@@ -10,7 +10,7 @@ import _ from 'lodash';
 import firebase from '@react-native-firebase/app';
 import { List, ListItem, SearchBar } from "react-native-elements";
 
-class SearchBarUsers extends Component {
+export default class SearchBarUsers extends Component {
   constructor(props) {
     super(props);
 

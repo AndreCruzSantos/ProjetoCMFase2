@@ -80,10 +80,7 @@ export default class Calendar extends React.Component {
                 ref: ola,
                 callB: teste,
             });
-            //firebase.database().ref().child('events').off('value', teste);
         });
-
-
 
     }
 
@@ -93,12 +90,6 @@ export default class Calendar extends React.Component {
         //items=null;
     }
 
-    /*componentDidUpdate(){
-        const {ref,callB,items} = this.state;
-        this.state.items = {};
-        ref.off('value', callB);
-        
-    }*/
 
 
 

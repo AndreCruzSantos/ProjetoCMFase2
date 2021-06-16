@@ -57,20 +57,44 @@ export default class EventPage extends React.Component {
             title: '',
 
         }
-    }
 
-    static navigationOptions = {
-        headerRight: () => (
+        /*EventPage.navigationOptions=({navigation}) =>{
+            return {
+                title: 'Teste',
+                headerStyle: {
+                    backgroundColor: 'green'
+                },
+                headerRight: () => (
+                <View style={styles.icons}>
+                    <TouchableOpacity style={{ right: '45%' }} onPress={() => navigation.navigate('Editar Evento')}>
+                        <Image style={{ height: 30, width: 30 }} source={require('../images/edit.png')}></Image>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ right: '35%' }} onPress={() => showConfirmDialog()}>
+                        <Image style={{ height: 30, width: 30 }} source={require('../images/trash.png')}></Image>
+                    </TouchableOpacity>
+                </View>
+                )
+            }
+        }*/
+    }
+    
+    static navigationOptions = ({navigation}) => ({
+        title: 'OLÁ',
+        headerRight: (
             <View style={styles.icons}>
-                <TouchableOpacity style={{ right: '45%' }} onPress={() => navigation.navigate('Editar Evento')}>
-                    <Image style={{ height: 30, width: 30 }} source={require('../images/edit.png')}></Image>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ right: '35%' }} onPress={() => showConfirmDialog()}>
-                    <Image style={{ height: 30, width: 30 }} source={require('../images/trash.png')}></Image>
-                </TouchableOpacity>
-            </View>
+        <TouchableOpacity style={{ right: '45%' }} onPress={() => navigation.navigate('Editar Evento')}>
+            <Image style={{ height: 30, width: 30 }} source={require('../images/edit.png')}></Image>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ right: '35%' }} onPress={() => showConfirmDialog()}>
+            <Image style={{ height: 30, width: 30 }} source={require('../images/trash.png')}></Image>
+        </TouchableOpacity>
+        </View>
         )
-    };
+    })
+        
+    
+        
+    
 
     componentDidMount() {
         
@@ -154,7 +178,3 @@ export default class EventPage extends React.Component {
     }
 
 }
-
-
-
-//export default EventPage;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, Button, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Image, Text, Button, ScrollView, TouchableOpacity, Alert, FlatList } from 'react-native';
 import prompt from 'react-native-prompt-android';
 
 export default class CalendarsScreen extends React.Component {
@@ -15,6 +15,25 @@ export default class CalendarsScreen extends React.Component {
                 placeholder: 'Escreva aqui...'
             }
         );
+    }
+
+    renderItem(title, key){
+
+        return(
+            <TouchableOpacity onPress={console.log(key)}>
+            <View style={styles.item_btn}>
+                <Text style={styles.item}> {title} </Text>
+                <View style={styles.btns}>
+                    <TouchableOpacity>
+                        <Image style={styles.btnsmall} source={require('../images/edit_grey.png')}></Image>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                         <Image style={styles.btnsmall} source={require('../images/trash_grey.png')}></Image>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            </TouchableOpacity>
+        )
     }
 
     render() {
