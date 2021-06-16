@@ -56,18 +56,6 @@ export default class CalendarsScreen extends React.Component {
     }
 
     getAllCalendars = () => {
-        /*
-        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').once('value').then(snapshot => {
-            const newArr = [];
-            snapshot.forEach(snap => {
-                newArr.push(
-                    snap.val().title
-                );
-            });
-            this.setState({ calendarsArr: newArr });
-            console.log(this.state.calendarsArr);
-        });*/
-
         firebase.database().ref().child('users').child(this.state.username).child('calendars').once('value', snapshot => {
             const newArr = [];
             snapshot.forEach(snap => {
@@ -84,17 +72,7 @@ export default class CalendarsScreen extends React.Component {
     }
 
     getAuthUsername = () => {
-        /*await firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
-            if (snapshot.exists()) {
-                snapshot.forEach((snap) => {
-                    this.setState({
-                        username: snap.key
-                    });
-                });
-            }
-        }).then(snap => {
-            this.getAllCalendars();
-        }).then(this.setState({}));*/
+
 
         firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
             if (snapshot.exists()) {

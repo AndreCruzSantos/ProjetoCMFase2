@@ -55,7 +55,8 @@ export default class EventPage extends React.Component {
             endTime: '',
             description: '',
             title: '',
-
+            username: '',
+            calendarKey: props.route.params.calendarKey,
         }
     }
 
@@ -72,15 +73,31 @@ export default class EventPage extends React.Component {
         )
     };
 
-    componentDidMount() {
-        
-        firebase.database().ref().child('events').child(this.state.eventKey).once('value', snapshot => {
+    getAuthUsername = () => {
+        firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+            if (snapshot.exists()) {
+                snapshot.forEach((snap) => {
+                    this.setState({
+                        username: snap.key
+                    });
+                });
+            }
+            this.loadEventInfo();
+        });
+    }
+
+    loadEventInfo = () => {
+        firebase.database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).once('value', snapshot => {
             this.setState({
                 startTime: Moment(snapshot.val().startDate).format('HH:mm'),
                 endTime: Moment(snapshot.val().endDate).format('HH:mm'),
                 description: snapshot.val().description, 
             });
         });
+    }
+
+    componentDidMount() {
+        this.getAuthUsername();
     }
 
 
