@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import firebase from '@react-native-firebase/app';
+import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
 
 import {
   StyleSheet,
@@ -11,10 +14,6 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-
-import firebase from '@react-native-firebase/app';
-import database from '@react-native-firebase/database';
-import auth from '@react-native-firebase/auth';
 
 var firebaseConfig = {
   apiKey: "AIzaSyAxdWpiRdhn2B_INeYWAqaS0K9awbJMyOM",
@@ -27,9 +26,12 @@ var firebaseConfig = {
   measurementId: "G-0V1ZQ3V6YD"
 };
 
+const name = {
+  name : 'DB_ANDRE'
+};
 
 if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig,name);
 }
 
 export default class Register extends React.Component {
@@ -43,16 +45,15 @@ export default class Register extends React.Component {
       password: '',
       repPassword: '',
     };
-
   }
 
   register = (name, mail, pass, repPass) => {
     if (name.length != 0 && mail.length != 0 && pass.length != 0 && repPass != 0) {
       if (pass == repPass) {
-        firebase.database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
+        firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
           if(!snapshot.exists()){
             firebase.auth().createUserWithEmailAndPassword(mail, pass).then(() => {
-              firebase.database().ref().child('users').child(name).set({'username': name, 'email': mail});
+              firebase.app('DB_ANDRE').database().ref().child('users').child(name).set({'username': name, 'email': mail});
               this.props.navigation.navigate('Login');
             });
           }else{
@@ -63,24 +64,8 @@ export default class Register extends React.Component {
     }
   }
 
-  checkUsername = (name) => {
-    firebase.database().ref().child('users').once('value').then(snapshot => {
-      snapshot.forEach(snap => {
-        if (snap.key == name) {
-          console.log(snap.key);
-          return true;
-        }
-      });
-      return false;
-    });
-    
-  }
-
-
   render() {
     const { username, email, password, repPassword } = this.state;
-
-
     return (
       <View style={styles.background}>
         <Image source={require("../images/AgendYourself_Logo.png")} style={styles.logo}></Image>
@@ -97,12 +82,12 @@ export default class Register extends React.Component {
         <View style={styles.inputView}>
           <Image source={require("../images/lock.png")} style={styles.image}></Image>
           <TextInput style={styles.input} placeholder="Password"
-            onChangeText={(pass) => { this.setState((prevState) => ({ password: pass })) }}></TextInput>
+            onChangeText={(pass) => { this.setState((prevState) => ({ password: pass })) }} secureTextEntry={true} ></TextInput>
         </View>
         <View style={styles.inputView}>
           <Image source={require("../images/lock.png")} style={styles.image}></Image>
           <TextInput style={styles.input} placeholder="Repetir Password"
-            onChangeText={(passRep) => { this.setState((prevState) => ({ repPassword: passRep })) }}></TextInput>
+            onChangeText={(passRep) => { this.setState((prevState) => ({ repPassword: passRep })) }} secureTextEntry={true} ></TextInput>
         </View>
         <TouchableOpacity style={styles.signInBtn} onPress={() => this.register(username, email, password, repPassword)}>
           <Text style={styles.signInText}>

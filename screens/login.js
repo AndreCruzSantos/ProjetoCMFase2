@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import auth from '@react-native-firebase/auth';
+
 import {
   StyleSheet,
   Text,
@@ -11,13 +11,34 @@ import {
 
 import firebase from '@react-native-firebase/app';
 import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
+
+var firebaseConfig = {
+  apiKey: "AIzaSyAxdWpiRdhn2B_INeYWAqaS0K9awbJMyOM",
+  authDomain: "agendyourselfbd.firebaseapp.com",
+  databaseURL: 'https://agendyourselfbd-default-rtdb.europe-west1.firebasedatabase.app/',
+  projectId: "agendyourselfbd",
+  storageBucket: "agendyourselfbd.appspot.com",
+  messagingSenderId: "303668905085",
+  appId: "1:303668905085:android:ed94470101e9de2ad29d14",
+  measurementId: "G-0V1ZQ3V6YD"
+};
+
+const name = {
+  name : 'DB_ANDRE'
+};
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig,name);
+}
 
 export default class Login extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      isChecked : false
     };
   }
 
@@ -46,9 +67,12 @@ export default class Login extends React.Component {
     this.props.navigation.navigate('ForgotPassword');
   }
 
-  render() {
-    const {email,password} = this.state;
+  setIsChecked = () => {
+    this.setState({isChecked : !this.state.isChecked});
+  }
 
+  render() {
+    const {email,password,isChecked} = this.state;
     return (
       <View style={styles.background}>
         <Image source={require("../images/AgendYourself_Logo.png")} style={styles.logo}></Image>
@@ -59,6 +83,8 @@ export default class Login extends React.Component {
         <View style={styles.inputView}>
           <Image source={require("../images/lock.png")} style={styles.image}></Image>
           <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={(pass) => {this.setState((prevState) => ({password : pass}))}}></TextInput>
+          {isChecked ? <Image style={styles.visibilityImage} source={require('../images/visibility.png')} onPress={this.setIsChecked}></Image> : <Image style={styles.visibilityImage} source={require('../images/visibility_off.png')} onPress={this.setIsChecked}></Image>}
+          
         </View>
         <Text style={styles.forgotPasswordTxt} onPress={this.goToForgotPassword}>
           Esqueceu-se da palavra-passe?
@@ -142,5 +168,9 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 17,
     fontWeight: 'bold'
+  },
+  visibilityImage: {
+    marginRight: 12,
+    marginTop: 12
   }
 });

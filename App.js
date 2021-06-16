@@ -18,7 +18,7 @@ const Stack = createStackNavigator();
 const App: () => Node = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Perfil de Utilizador">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="CalendárioTeste" component={Calendar}></Stack.Screen>
         <Stack.Screen name="Criar Evento" component={CreateEvent}></Stack.Screen>
         <Stack.Screen name="Página Evento" component={EventPage}></Stack.Screen>
@@ -26,7 +26,7 @@ const App: () => Node = () => {
         <Stack.Screen name="Register" component={Register}></Stack.Screen>
         <Stack.Screen name="Calendário" component={CalendarsScreen}></Stack.Screen>
         <Stack.Screen name="Editar Evento" component={EditEvent}></Stack.Screen>
-        <Stack.Screen name="Perfil de Utilizador" component={UserProfile}></Stack.Screen>
+        <Stack.Screen name="Perfil" component={UserProfile}></Stack.Screen>
         <Stack.Screen name="ForgotPassword" component={ForgotPassword}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
