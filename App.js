@@ -6,11 +6,12 @@ import { NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator} from '@react-navigation/stack';
 import CalendarsScreen from './screens/Home';
 import CreateEvent from './screens/create_event';
-import UserProfile from './screens/userProfile.js';
+import UserProfile from './screens/userProfile';
 import EventPage from './screens/event_page';
 import EditEvent from './screens/edit_event';
 import Calendar from './screens/calendar';
 import ForgotPassword from './screens/forgotPassword';
+import MapScreen from './screens/map';
 
 
 const Stack = createStackNavigator();
@@ -18,7 +19,7 @@ const Stack = createStackNavigator();
 const App: () => Node = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Perfil de Utilizador">
+      <Stack.Navigator initialRouteName="Map">
         <Stack.Screen name="CalendárioTeste" component={Calendar}></Stack.Screen>
         <Stack.Screen name="Criar Evento" component={CreateEvent}></Stack.Screen>
         <Stack.Screen name="Página Evento" component={EventPage}></Stack.Screen>
@@ -28,6 +29,7 @@ const App: () => Node = () => {
         <Stack.Screen name="Editar Evento" component={EditEvent}></Stack.Screen>
         <Stack.Screen name="Perfil de Utilizador" component={UserProfile}></Stack.Screen>
         <Stack.Screen name="ForgotPassword" component={ForgotPassword}></Stack.Screen>
+        <Stack.Screen name="Map" component={MapScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
