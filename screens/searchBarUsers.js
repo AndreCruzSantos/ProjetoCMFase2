@@ -42,8 +42,10 @@ export default class SearchBarUsers extends Component {
         user = {"username": snap.val().username, "email": snap.val().email};
         arr.push(user);
       });
+      
     });
     this.setState({data: arr});
+
   };
 
   handleSearch = (text) => {
@@ -100,11 +102,12 @@ export default class SearchBarUsers extends Component {
                 containerStyle={{ borderBottomWidth: 0 }}
               />
             )}
-            keyExtractor={item => item.email}
+            keyExtractor={item => item.username}
             ItemSeparatorComponent={this.renderSeparator}
             ListHeaderComponent={this.renderHeader}
             ListFooterComponent={this.renderFooter}
-          />
+            >
+          </FlatList>
         </List>
       </SafeAreaView>
     );

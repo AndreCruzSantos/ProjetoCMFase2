@@ -20,7 +20,7 @@ export default class ChangePasswordc extends React.Component {
     resetPassword = (password) => {
         auth().currentUser.updatePassword(password).then(() => {
             alert('Password alterada!');
-            this.props.navigation.navigate('UserProfile');
+            this.props.navigation.navigate('Perfil');
         })
     }
 
@@ -33,7 +33,7 @@ export default class ChangePasswordc extends React.Component {
                     <Image source={require("../images/lock.png")} style={styles.image}></Image>
                     <TextInput style={styles.input} placeholder='Insira a nova Password' onChangeText={(newPassword) => {this.setState((prevState) => ({password : newPassword}))}}></TextInput>
                 </View>
-                <TouchableOpacity style={styles.newPassword} onPress={() => this.resetPassword(password)}>
+                <TouchableOpacity style={styles.newPassword} onPress={() => this.resetPassword(this.state.password)}>
                     <Text style={styles.text}>
                         Nova Password!
                     </Text>
