@@ -50,13 +50,13 @@ export default class CalendarsScreen extends React.Component {
     }
 
     createCalendar = (title) => {
-        firebase.database().ref().child('users').child(this.state.username).child('calendars').push().set({ 'title': title }).then((snapshot) => {
+        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').push().set({ 'title': title }).then((snapshot) => {
             Alert.alert('Calendário criado com sucesso!');
         }).then(this.getAllCalendars());
     }
 
     getAllCalendars = () => {
-        firebase.database().ref().child('users').child(this.state.username).child('calendars').once('value', snapshot => {
+        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').once('value', snapshot => {
             const newArr = [];
             snapshot.forEach(snap => {
                 newArr.push({
@@ -74,7 +74,7 @@ export default class CalendarsScreen extends React.Component {
     getAuthUsername = () => {
 
 
-        firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+        firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
             if (snapshot.exists()) {
                 snapshot.forEach((snap) => {
                     this.setState({
@@ -101,7 +101,7 @@ export default class CalendarsScreen extends React.Component {
                         array.map(elem => {
                             return(
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key } )}>    
-                            <View style={styles.item_btn}>
+                            <View style={styles.item_btn} key = {elem.key}>
                                 <Text style={styles.item}>{elem.title}</Text>
                                 <View style={styles.btns}>
                                     <TouchableOpacity>
