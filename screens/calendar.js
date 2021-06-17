@@ -15,7 +15,24 @@ import { Calendars, CalendarList, Agenda } from 'react-native-calendars';
 import firebase from '@react-native-firebase/app';
 import database from '@react-native-firebase/database';
 
-
+var firebaseConfig = {
+    apiKey: "AIzaSyAxdWpiRdhn2B_INeYWAqaS0K9awbJMyOM",
+    authDomain: "agendyourselfbd.firebaseapp.com",
+    databaseURL: 'https://agendyourselfbd-default-rtdb.europe-west1.firebasedatabase.app/',
+    projectId: "agendyourselfbd",
+    storageBucket: "agendyourselfbd.appspot.com",
+    messagingSenderId: "303668905085",
+    appId: "1:303668905085:android:ed94470101e9de2ad29d14",
+    measurementId: "G-0V1ZQ3V6YD"
+  };
+  
+  const name = {
+    name: 'DB_ANDRE'
+  };
+  
+  
+    firebase.initializeApp(firebaseConfig, name);
+  
 
 export default class Calendar extends React.Component {
 
@@ -24,8 +41,6 @@ export default class Calendar extends React.Component {
 
         this.state = {
             items: {},
-            ref: null,
-            callB: null,
             calendarKey: props.route.params.calendarKey,
             username: ''
         };
@@ -33,7 +48,7 @@ export default class Calendar extends React.Component {
     }
 
     getAuthUsername = () => {
-        firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+        firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
             if (snapshot.exists()) {
                 snapshot.forEach((snap) => {
                     this.setState({
@@ -51,7 +66,7 @@ export default class Calendar extends React.Component {
             items: {}
         });
 
-        const ola = firebase.database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events');
+        const ola = firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events');
         const teste = ola.on('value', snapshot => {
             snapshot.forEach(snap => {
                 const key = snap.val().startDate;
@@ -101,15 +116,6 @@ export default class Calendar extends React.Component {
     componentDidMount() {
         this.getAuthUsername();
     }
-
-    componentWillUnmount() {
-        const { ref, callB, items } = this.state;
-        ref.off('value', callB);
-        //items=null;
-    }
-
-
-
 
     render() {
         

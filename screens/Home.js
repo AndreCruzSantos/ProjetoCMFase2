@@ -49,10 +49,29 @@ export default class CalendarsScreen extends React.Component {
         );
     }
 
+    promptEditCalendar = (key) => {
+        prompt('Editar Calendário','Insira o novo nome do calendário.',
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'OK', onPress: text => this.editCalendar(key,text),style: 'ok'}
+            ],
+            {
+                type: 'plain-text',
+                cancelable: false,
+                placeholder: 'Escreva aqui...'
+            }
+        );
+    }
+
+    editCalendar = (key,text) => {
+        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(key).update({'title' : text}).then(this.getAllCalendars());
+    }
+
     createCalendar = (title) => {
         firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').push().set({ 'title': title }).then((snapshot) => {
             Alert.alert('Calendário criado com sucesso!');
-        }).then(this.getAllCalendars());
+            this.getAllCalendars()
+        });
     }
 
     getAllCalendars = () => {
@@ -67,8 +86,6 @@ export default class CalendarsScreen extends React.Component {
             });
             this.setState({ calendarsArr: newArr });
         });
-            
-
     }
 
     getAuthUsername = () => {
@@ -84,6 +101,12 @@ export default class CalendarsScreen extends React.Component {
             }
             this.getAllCalendars();
         });
+    }
+
+    deleteCalendar = (key) => {
+        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(key).remove().then(
+            this.getAllCalendars()
+        );
     }
 
     render() {
@@ -104,10 +127,10 @@ export default class CalendarsScreen extends React.Component {
                             <View style={styles.item_btn} key = {elem.key}>
                                 <Text style={styles.item}>{elem.title}</Text>
                                 <View style={styles.btns}>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => this.promptEditCalendar(elem.key)}>
                                         <Image style={styles.btnsmall} source={require('../images/edit_grey.png')}></Image>
                                     </TouchableOpacity>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => this.deleteCalendar(elem.key)}>
                                         <Image style={styles.btnsmall} source={require('../images/trash_grey.png')}></Image>
                                     </TouchableOpacity>
                                 </View>

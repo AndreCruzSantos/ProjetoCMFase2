@@ -17,6 +17,24 @@ import MomentPT from 'moment/src/locale/pt';
 import firebase from '@react-native-firebase/app';
 import database from '@react-native-firebase/database';
 
+var firebaseConfig = {
+  apiKey: "AIzaSyAxdWpiRdhn2B_INeYWAqaS0K9awbJMyOM",
+  authDomain: "agendyourselfbd.firebaseapp.com",
+  databaseURL: 'https://agendyourselfbd-default-rtdb.europe-west1.firebasedatabase.app/',
+  projectId: "agendyourselfbd",
+  storageBucket: "agendyourselfbd.appspot.com",
+  messagingSenderId: "303668905085",
+  appId: "1:303668905085:android:ed94470101e9de2ad29d14",
+  measurementId: "G-0V1ZQ3V6YD"
+};
+
+const name = {
+  name: 'DB_ANDRE'
+};
+
+
+  firebase.initializeApp(firebaseConfig, name);
+
 
 class FloatingLabelInput extends Component {
   state = {
@@ -119,7 +137,7 @@ export default class CreateEvent extends React.Component {
   }
 
   getAuthUsername = () => {
-    firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+    firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
         if (snapshot.exists()) {
             snapshot.forEach((snap) => {
                 this.setState({
@@ -133,7 +151,7 @@ export default class CreateEvent extends React.Component {
 
   createEvent = (title, desc, locat, sDate, eDate) => {
     if (title.length != 0 && desc.length != 0 && locat.length != 0) {
-      firebase.database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events').push().set({
+      firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events').push().set({
         "title": title, "description": desc, "location": locat,
         "startDate": sDate, "endDate": eDate
       });
