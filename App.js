@@ -11,6 +11,8 @@ import EventPage from './screens/event_page';
 import EditEvent from './screens/edit_event';
 import Calendar from './screens/calendar';
 import ForgotPassword from './screens/forgotPassword';
+import Search from './screens/searchBarUsers';
+import changePassword from './screens/changePassword';
 
 
 const Stack = createStackNavigator();
@@ -18,16 +20,18 @@ const Stack = createStackNavigator();
 const App: () => Node = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Perfil de Utilizador">
+      <Stack.Navigator initialRouteName="ChangePassword">
         <Stack.Screen name="CalendárioTeste" component={Calendar}></Stack.Screen>
         <Stack.Screen name="Criar Evento" component={CreateEvent}></Stack.Screen>
         <Stack.Screen name="Página Evento" component={EventPage}></Stack.Screen>
         <Stack.Screen name="Login" component={Login}></Stack.Screen>
         <Stack.Screen name="Register" component={Register}></Stack.Screen>
+        <Stack.Screen name="ChangePassword" component={changePassword}></Stack.Screen>
         <Stack.Screen name="Calendário" component={CalendarsScreen}></Stack.Screen>
         <Stack.Screen name="Editar Evento" component={EditEvent}></Stack.Screen>
         <Stack.Screen name="Perfil de Utilizador" component={UserProfile}></Stack.Screen>
         <Stack.Screen name="ForgotPassword" component={ForgotPassword}></Stack.Screen>
+        <Stack.Screen name="Search" component={Search}></Stack.Screen> 
       </Stack.Navigator>
     </NavigationContainer>
   );
