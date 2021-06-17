@@ -18,7 +18,6 @@ import firebase from '@react-native-firebase/app';
 import database from '@react-native-firebase/database';
 
 
-
 class FloatingLabelInput extends Component {
   state = {
     isFocused: false,
@@ -97,6 +96,9 @@ export default class CreateEvent extends React.Component {
   constructor(props) {
     super(props);
 
+    var params = this.props.route.params;
+    console.log(params);
+
     this.state = {
       value: '',
       description: '',
@@ -106,9 +108,7 @@ export default class CreateEvent extends React.Component {
       isVisible: false,
       endDate: new Date(),
       isEndVisible: false,
-    };
-
-
+    };  
   }
 
 
