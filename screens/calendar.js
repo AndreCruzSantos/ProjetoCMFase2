@@ -25,20 +25,33 @@ export default class Calendar extends React.Component {
         this.state = {
             items: {},
             ref: null,
-            callB: null
+            callB: null,
+            calendarKey: props.route.params.calendarKey,
+            username: ''
         };
 
     }
 
+    getAuthUsername = () => {
+        firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+            if (snapshot.exists()) {
+                snapshot.forEach((snap) => {
+                    this.setState({
+                        username: snap.key
+                    });
+                });
+            }
+            this.loadAllCalendars();
+        });
+    }
 
-
-    componentDidMount() {
+    loadAllCalendars = () => {
         const empty = {};
         this.setState({
-            items: empty
+            items: {}
         });
 
-        const ola = firebase.database().ref().child('events');
+        const ola = firebase.database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events');
         const teste = ola.on('value', snapshot => {
             snapshot.forEach(snap => {
                 const key = snap.val().startDate;
@@ -82,6 +95,11 @@ export default class Calendar extends React.Component {
             });
         });
 
+
+    }
+
+    componentDidMount() {
+        this.getAuthUsername();
     }
 
     componentWillUnmount() {
@@ -94,11 +112,9 @@ export default class Calendar extends React.Component {
 
 
     render() {
-        const { items } = this.state;
+        
         return (
             <View style={{ flex: 1 }}>
-
-
                 <Agenda
                     items={this.state.items}
                     selected={'2021-06-10'}
@@ -114,7 +130,7 @@ export default class Calendar extends React.Component {
                 />
 
                 <TouchableOpacity activeOpacity={0.7}
-                    onPress={() => this.props.navigation.navigate('Criar Evento')}
+                    onPress={() => this.props.navigation.navigate('Criar Evento', {calendarKey : this.state.calendarKey})}
                     style={styles.addButton}>
                     <Image source={require('../images/add.png')}></Image>
                 </TouchableOpacity>
@@ -210,7 +226,7 @@ export default class Calendar extends React.Component {
         return (
             <TouchableOpacity
                 style={[styles.item]}
-                onPress={() => this.props.navigation.navigate('Página Evento', { eventKey: item.key })}
+                onPress={() => this.props.navigation.navigate('Página Evento', { eventKey: item.key, calendarKey: this.state.calendarKey })}
             >
                 <Text>{item.title}</Text>
             </TouchableOpacity>

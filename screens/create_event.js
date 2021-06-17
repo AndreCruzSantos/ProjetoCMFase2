@@ -108,17 +108,37 @@ export default class CreateEvent extends React.Component {
       isVisible: false,
       endDate: new Date(),
       isEndVisible: false,
-    };  
+      calendarKey: props.route.params.calendarKey,
+      username: '',
+    };
+
   }
+
+  componentDidMount(){
+    this.getAuthUsername();
+  }
+
+  getAuthUsername = () => {
+    firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+        if (snapshot.exists()) {
+            snapshot.forEach((snap) => {
+                this.setState({
+                    username: snap.key
+                });
+            });
+        }
+    });
+}
 
 
   createEvent = (title, desc, locat, sDate, eDate) => {
     if (title.length != 0 && desc.length != 0 && locat.length != 0) {
-      firebase.database().ref().child('events').push().set({
+      firebase.database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events').push().set({
         "title": title, "description": desc, "location": locat,
         "startDate": sDate, "endDate": eDate
       });
-      this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste'}]});
+      this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey}}]});
+      //this.props.navigation.navigate('CalendárioTeste', {calendarKey: this.state.calendarKey});
     } else {
       Alert.alert('Todos os campos têm de estar preenchidos.');
     }
