@@ -67,6 +67,21 @@ export default class CalendarsScreen extends React.Component {
         firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(key).update({'title' : text}).then(this.getAllCalendars());
     }
 
+    promptChooseUser = () => {
+        prompt('Utilizador a partilhar', 'Escolha o utilizador a partilhar o calendário!', 
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'OK', onPress: password => console.log('OK Pressed'), style: 'ok'},
+            ],
+            {
+                type: 'plain-text',
+                cancelable: false,
+                placeholder: 'Escreva aqui...'
+            }
+        );
+    }
+
+
     createCalendar = (title) => {
         firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').push().set({ 'title': title }).then((snapshot) => {
             Alert.alert('Calendário criado com sucesso!');
@@ -132,6 +147,9 @@ export default class CalendarsScreen extends React.Component {
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => this.deleteCalendar(elem.key)}>
                                         <Image style={styles.btnsmall} source={require('../images/trash_grey.png')}></Image>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity>
+                                        <Image style={styles.btnsmall} source={require('../images/share_grey.png')}></Image>
                                     </TouchableOpacity>
                                 </View>
                             </View>
