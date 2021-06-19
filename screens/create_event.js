@@ -146,8 +146,7 @@ export default class CreateEvent extends React.Component {
             });
         }
     });
-}
-
+  }
 
   createEvent = (title, desc, locat, sDate, eDate) => {
     if (title.length != 0 && desc.length != 0 && locat.length != 0) {
