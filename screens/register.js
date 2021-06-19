@@ -26,12 +26,8 @@ var firebaseConfig = {
   measurementId: "G-0V1ZQ3V6YD"
 };
 
-const name = {
-  name : 'DB_ANDRE'
-};
-
 if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig,name);
+  firebase.initializeApp(firebaseConfig);
 }
 
 export default class Register extends React.Component {
@@ -50,10 +46,10 @@ export default class Register extends React.Component {
   register = (name, mail, pass, repPass) => {
     if (name.length != 0 && mail.length != 0 && pass.length != 0 && repPass != 0) {
       if (pass == repPass) {
-        firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
+        firebase.database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
           if(!snapshot.exists()){
             firebase.auth().createUserWithEmailAndPassword(mail, pass).then(() => {
-              firebase.app('DB_ANDRE').database().ref().child('users').child(name).set({'username': name, 'email': mail});
+              firebase.database().ref().child('users').child(name).set({'username': name, 'email': mail});
               this.props.navigation.navigate('Login');
             });
           }else{
@@ -94,9 +90,9 @@ export default class Register extends React.Component {
             Registe-se
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.registerBtn}>
+        <TouchableOpacity style={styles.registerBtn} onPress={() => this.props.navigation.navigate('Login')}>
           <Text style={styles.registerTxt}>
-            Já tem conta?
+            Já tem conta? Inicie sessão
           </Text>
         </TouchableOpacity>
       </View>

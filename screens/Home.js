@@ -14,12 +14,8 @@ var firebaseConfig = {
     measurementId: "G-0V1ZQ3V6YD"
 };
 
-const name = {
-    name: 'DB_ANDRE'
-};
-
 if(!firebase.apps.length){
-    firebase.initializeApp(firebaseConfig, name);
+    firebase.initializeApp(firebaseConfig);
 }
 
 export default class CalendarsScreen extends React.Component {
@@ -50,13 +46,13 @@ export default class CalendarsScreen extends React.Component {
     }
 
     createCalendar = (title) => {
-        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').push().set({ 'title': title }).then((snapshot) => {
+        firebase.database().ref().child('users').child(this.state.username).child('calendars').push().set({ 'title': title }).then((snapshot) => {
             Alert.alert('Calendário criado com sucesso!');
         }).then(this.getAllCalendars());
     }
 
     getAllCalendars = () => {
-        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').once('value', snapshot => {
+        firebase.database().ref().child('users').child(this.state.username).child('calendars').once('value', snapshot => {
             const newArr = [];
             snapshot.forEach(snap => {
                 newArr.push({
@@ -72,9 +68,7 @@ export default class CalendarsScreen extends React.Component {
     }
 
     getAuthUsername = () => {
-
-
-        firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+        firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
             if (snapshot.exists()) {
                 snapshot.forEach((snap) => {
                     this.setState({
@@ -89,6 +83,9 @@ export default class CalendarsScreen extends React.Component {
     render() {
         const array = this.state.calendarsArr;
         return (
+          <View style={{
+              flex: 1
+          }}>
             <ScrollView style={styles.scrollview}>
                 <View style={styles.calendarType}>
                     <View style={styles.category_btn}>
@@ -116,8 +113,14 @@ export default class CalendarsScreen extends React.Component {
                             )
                         })
                     }
-                </View>
+              </View>
             </ScrollView>
+                <TouchableOpacity activeOpacity={0.7}
+                    onPress={() => this.props.navigation.navigate('Perfil')}
+                    style={styles.floatingBtn}>
+                    <Image source={require('../images/profile_white.png')}></Image>
+                </TouchableOpacity>
+            </View>
         );
     }
 }
@@ -176,5 +179,14 @@ var styles = {
         borderWidth: 1,
         borderRadius: 10,
         borderColor: '#000000'
+    },
+    floatingBtn: {
+        position: 'absolute',
+        width: 50,
+        height: 50,
+        right: 30,
+        bottom: 30,
+        borderRadius: 100,
+        backgroundColor: 'orange',
     }
 }
