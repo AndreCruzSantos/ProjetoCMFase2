@@ -27,7 +27,9 @@ export default class CalendarsScreen extends React.Component {
         super(props);
         this.state = {
             username: '',
-            calendarsArr: []
+            calendarsArr: [],
+            copiedCalendarsArr: [],
+            sharedCalendarsArr: []
         };
     }
 
@@ -49,10 +51,91 @@ export default class CalendarsScreen extends React.Component {
         );
     }
 
+    promptEditCalendar = (key) => {
+        prompt('Editar Calendário','Insira o novo nome do calendário.',
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'OK', onPress: text => this.editCalendar(key,text),style: 'ok'}
+            ],
+            {
+                type: 'plain-text',
+                cancelable: false,
+                placeholder: 'Escreva aqui...'
+            }
+        );
+    }
+
+    editCalendar = (key,text) => {
+        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(key).update({'title' : text}).then(
+            firebase.app('DB_ANDRE').database().ref().child('users').once('value').then(snapshot => {
+                snapshot.forEach(snap => {
+                    if(snap.key != this.state.username){
+                        if(typeof snap.val().shareCalendars !== 'undefined'){
+                            firebase.app('DB_ANDRE').database().ref().child('users').child(snap.key).child('shareCalendars').child(key).update({'title' : text});
+                        }
+                    }
+                });
+            })
+        ).then(this.getAllCalendars());
+    }
+
+    promptChooseUser = (key) => {
+        prompt('Utilizador a partilhar', 'Escolha o utilizador a partilhar o calendário!', 
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'Cópia', onPress: username => this.copyCalendar(key,username), style: 'ok'},
+                {text: 'Compartilhar', onPress: username => this.shareCalendar(key,username), style: 'ok'}
+            ],
+            {
+                type: 'plain-text',
+                cancelable: false,
+                placeholder: 'Escreva aqui...'
+            }
+        );
+    }
+
+    copyCalendar = (key,name) => {
+        var copyUsername = '';
+        if(name.length != 0){
+            firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
+                if(snapshot.exists()){
+                    snapshot.forEach(elem => {
+                        copyUsername = elem.key
+                    });
+                    firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(key).once('value').then(snap => {
+                        if(snap.exists()){
+                            console.log(snap.val())
+                            firebase.app('DB_ANDRE').database().ref().child('users').child(copyUsername).child('copiedCalendars').push().set(snap.val()).then();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    shareCalendar = (key,name) => {
+        var copyUsername = '';
+        if(name.length != 0){
+            firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
+                if(snapshot.exists()){
+                    snapshot.forEach(elem => {
+                        copyUsername = elem.key
+                    });
+                    firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(key).once('value').then(snap => {
+                        if(snap.exists()){
+                            firebase.app('DB_ANDRE').database().ref().child('users').child(copyUsername).child('shareCalendars').child(key).set(snap.val()).then();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
     createCalendar = (title) => {
         firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').push().set({ 'title': title }).then((snapshot) => {
             Alert.alert('Calendário criado com sucesso!');
-        }).then(this.getAllCalendars());
+            this.getAllCalendars()
+        });
     }
 
     getAllCalendars = () => {
@@ -62,18 +145,35 @@ export default class CalendarsScreen extends React.Component {
                 newArr.push({
                     'title' : snap.val().title,
                     'key' : snap.key,
-                }
-                );
+                });
             });
             this.setState({ calendarsArr: newArr });
-        });
-            
-
+        }).then(
+            firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('copiedCalendars').once('value',snapshot => {
+                const copiedArr = [];
+                snapshot.forEach(snap => {
+                    copiedArr.push({
+                        'title' : snap.val().title,
+                        'key' : snap.key
+                    });
+                });
+                this.setState({copiedCalendarsArr : copiedArr});
+            })
+        ).then(
+            firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('shareCalendars').once('value',snapshot => {
+                const sharedArr = [];
+                snapshot.forEach(snap => {
+                    sharedArr.push({
+                        'title' : snap.val().title,
+                        'key' : snap.key
+                    });
+                });
+                this.setState({sharedCalendarsArr : sharedArr});
+            })
+        );
     }
 
     getAuthUsername = () => {
-
-
         firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
             if (snapshot.exists()) {
                 snapshot.forEach((snap) => {
@@ -86,28 +186,78 @@ export default class CalendarsScreen extends React.Component {
         });
     }
 
+    deleteCalendar = (key,string) => {
+        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child(string).child(key).remove().then(
+            this.getAllCalendars()
+        );
+    }
+
     render() {
         const array = this.state.calendarsArr;
+        const copiedArray = this.state.copiedCalendarsArr;
+        const sharedArray = this.state.sharedCalendarsArr;
         return (
             <ScrollView style={styles.scrollview}>
                 <View style={styles.calendarType}>
-                    <View style={styles.category_btn}>
-                        <Text style={styles.category}>Meus Calendários</Text>
-                        <TouchableOpacity onPress={this.promptCreateCalendar}>
-                            <Image style={styles.btnbig} source={require('../images/add_orange.png')}></Image>
-                        </TouchableOpacity>
-                    </View>
+                <View style={styles.category_btn}>
+                    <Text style={styles.category}>Meus Calendários</Text>
+                    <TouchableOpacity onPress={this.promptCreateCalendar}>
+                        <Image style={styles.btnbig} source={require('../images/add_orange.png')}></Image>
+                    </TouchableOpacity>
+                </View>
                     {
                         array.map(elem => {
                             return(
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key } )}>    
+                                    <View style={styles.item_btn} key = {elem.key}>
+                                        <Text style={styles.item}>{elem.title}</Text>
+                                        <View style={styles.btns}>
+                                            <TouchableOpacity onPress={() => this.promptEditCalendar(elem.key)}>
+                                                <Image style={styles.btnsmall} source={require('../images/edit_grey.png')}></Image>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.deleteCalendar(elem.key,'calendars')}>
+                                                <Image style={styles.btnsmall} source={require('../images/trash_grey.png')}></Image>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.promptChooseUser(elem.key)}>
+                                                <Image style={styles.btnsmall} source={require('../images/share_grey.png')}></Image>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                            )
+                        })
+                    }
+                    <View style={styles.category_btn}>
+                        <Text style={styles.category}>Calendários Partilhados</Text>
+                    </View>
+                    {
+                        copiedArray.map(elem => {
+                            return(
+                                
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key } )}>    
                             <View style={styles.item_btn} key = {elem.key}>
                                 <Text style={styles.item}>{elem.title}</Text>
                                 <View style={styles.btns}>
-                                    <TouchableOpacity>
-                                        <Image style={styles.btnsmall} source={require('../images/edit_grey.png')}></Image>
+                                    <TouchableOpacity onPress={() => this.deleteCalendar(elem.key,'copiedCalendars')}>
+                                        <Image style={styles.btnsmall} source={require('../images/trash_grey.png')}></Image>
                                     </TouchableOpacity>
-                                    <TouchableOpacity>
+                                </View>
+                            </View>
+                            </TouchableOpacity>
+                            )
+                        })
+                    }
+                    <View style={styles.category_btn}>
+                        <Text style={styles.category}>Calendários Compartilhados</Text>
+                    </View>
+                    {
+                        sharedArray.map(elem => {
+                            return(  
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key } )}>    
+                            <View style={styles.item_btn} key = {elem.key}>
+                                <Text style={styles.item}>{elem.title}</Text>
+                                <View style={styles.btns}>
+                                    <TouchableOpacity onPress={() => this.deleteCalendar(elem.key,'shareCalendars')}>
                                         <Image style={styles.btnsmall} source={require('../images/trash_grey.png')}></Image>
                                     </TouchableOpacity>
                                 </View>
@@ -134,7 +284,7 @@ var styles = {
 
     },
     category: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
         color: '#FF8000',
         marginLeft: 10
