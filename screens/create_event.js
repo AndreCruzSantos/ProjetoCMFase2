@@ -170,7 +170,7 @@ export default class CreateEvent extends React.Component {
         "title": title, "description": desc, "location": locat,
         "startDate": sDate, "endDate": eDate
       });
-      this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey}}]});
+      this.props.navigation.reset({index:1, routes:[{name: 'Calendário'},{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey}}]});
       //this.props.navigation.navigate('CalendárioTeste', {calendarKey: this.state.calendarKey});
     } else {
       Alert.alert('Todos os campos têm de estar preenchidos.');

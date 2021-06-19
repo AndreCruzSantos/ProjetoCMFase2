@@ -114,8 +114,17 @@ export default class Calendar extends React.Component {
     }
 
     componentDidMount() {
+        //this.getAuthUsername();
         this.props.navigation.addListener('focus', () => { this.getAuthUsername()});
     }
+
+    componentWillUnmount() {
+        const { ref, callB, items } = this.state;
+        ref.off('value', callB);
+        //items=null;
+    }
+
+
 
     render() {
         
