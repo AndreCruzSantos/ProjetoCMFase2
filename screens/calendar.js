@@ -114,16 +114,16 @@ export default class Calendar extends React.Component {
     }
 
     componentDidMount() {
-        this.getAuthUsername();
+        this.props.navigation.addListener('focus', () => { this.getAuthUsername()});
     }
 
     render() {
         
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1}}>
                 <Agenda
                     items={this.state.items}
-                    selected={'2021-06-10'}
+                    selected={new Date()}
                     renderItem={this.renderItem.bind(this)}
                     renderEmptyDate={this.renderEmptyDate.bind(this)}
                     rowHasChanged={this.rowHasChanged.bind(this)}
@@ -131,14 +131,15 @@ export default class Calendar extends React.Component {
                     theme={{
                         selectedDayBackgroundColor: 'orange',
                         dotColor: 'black',
-                        selectedDotColor: 'white'
+                        selectedDotColor: 'white',
+                        backgroundColor: '#2B2A2A'
                     }}
                 />
 
                 <TouchableOpacity activeOpacity={0.7}
                     onPress={() => this.props.navigation.navigate('Criar Evento', {calendarKey : this.state.calendarKey})}
                     style={styles.addButton}>
-                    <Image source={require('../images/add.png')}></Image>
+                    <Image source={require('../images/add_white.png')}></Image>
                 </TouchableOpacity>
 
             </View>

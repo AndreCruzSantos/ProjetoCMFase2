@@ -7,7 +7,8 @@ import {
   Switch,
   TouchableOpacity,
   Image,
-  Alert
+  Alert,
+  Button
 } from 'react-native';
 
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -66,7 +67,7 @@ class FloatingLabelInput extends Component {
       left: 0,
       top: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],
-        outputRange: [18, 0],
+        outputRange: [10, 5],
       }),
       fontSize: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],
@@ -74,17 +75,17 @@ class FloatingLabelInput extends Component {
       }),
       color: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],
-        outputRange: ['#000', '#000'],
+        outputRange: ['#fff', '#fff'],
       }),
     };
     return (
-      <View style={{ paddingTop: 18 }}>
+      <View style={{ paddingTop: 20 }}>
         <Animated.Text style={labelStyle}>
           {label}
         </Animated.Text>
         <TextInput
           {...props}
-          style={{ height: 39, fontSize: 15, color: '#000', borderBottomWidth: 1, borderBottomColor: '#555' }}
+          style={{ height: 39, fontSize: 15, color: '#fff', borderBottomWidth: 1, borderBottomColor: '#555' }}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           blurOnSubmit
@@ -104,18 +105,29 @@ var styles = {
     justifyContent: 'space-between'
   },
   dataView: {
-    marginLeft: '6%',
+    marginLeft: '5%',
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
+  image: {
+    width: 25,
+    height: 25,
+    marginTop: 12,
+    marginLeft: 10
+  },
+  createEventView: {
+    alignItems: 'center',
+    marginTop: 100
+  },
+  createEventBtn: {
+    justifyContent: 'space-between',
+    flexDirection: 'row'
+  }
 }
 
 export default class CreateEvent extends React.Component {
   constructor(props) {
     super(props);
-
-    var params = this.props.route.params;
-    console.log(params);
 
     this.state = {
       value: '',
@@ -132,7 +144,11 @@ export default class CreateEvent extends React.Component {
 
   }
 
-  componentDidMount(){
+  componentDidMount() {
+    this.props.navigation.addListener('focus', () => {
+      this.setState({
+      })
+    });
     this.getAuthUsername();
   }
 
@@ -175,11 +191,16 @@ export default class CreateEvent extends React.Component {
       endDate: datetime
     })
   }
-
   render() {
     const { value, description, location, isEnabled, startDate, isVisible, endDate, isEndVisible } = this.state;
+    var params = this.props.route.params;
+    this.state.location = (params.lat && params.long) ? params.lat + ":" + params.long : "";
+    
     return (
-      <View>
+      <View style={{
+        backgroundColor: '#2B2A2A',
+        flex: 1
+      }}>
 
         <View style={{ margin: 20 }}>
 
@@ -187,7 +208,6 @@ export default class CreateEvent extends React.Component {
             label="Título"
             value={value}
             onChangeText={(title) => { this.setState((prevState) => ({ value: title })) }}
-
           />
 
 
@@ -202,12 +222,24 @@ export default class CreateEvent extends React.Component {
             value={location}
             onChangeText={(loc) => { this.setState((prevState) => ({ location: loc })) }}
           />
+          <View style={{
+            flexDirection: 'row'
+          }}>
+            <Text style={{
+              marginTop: 10,
+              fontSize: 20,
+              color: '#fff'
+            }}>Escolher localização no mapa: </Text>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Map')}>
+              <Image style={styles.image} source={require('../images/map_white.png')}></Image>
+            </TouchableOpacity>
+          </View>
 
         </View>
 
 
         <View style={styles.switchView}>
-          <Text style={{ color: "#000", fontSize: 20 }}>
+          <Text style={{ color: "#fff", fontSize: 20 }}>
             O dia todo
                     </Text>
           <Switch style={{ marginEnd: '4%' }}
@@ -224,10 +256,10 @@ export default class CreateEvent extends React.Component {
             onPress={() => this.setState({ isVisible: !this.state.isVisible })}
           >
 
-            <Text style={{ color: "#000", fontSize: 20 }}>Início </Text>
+            <Text style={{ color: "#fff", fontSize: 20 }}>Início </Text>
             {isEnabled ?
               <View>
-                <Text style={{ color: "#000", fontSize: 15, marginEnd: '4%' }}> {Moment(startDate).format('DD ' + '' + 'MMMM')}</Text>
+                <Text style={{ color: "#fff", fontSize: 15, marginEnd: '4%' }}> {Moment(startDate).format('DD ' + '' + 'MMMM')}</Text>
                 <DateTimePicker
                   isVisible={isVisible}
                   mode="date"
@@ -238,7 +270,7 @@ export default class CreateEvent extends React.Component {
               </View>
               :
               <View>
-                <Text style={{ color: "#000", fontSize: 15, marginEnd: '4%' }}> {Moment(startDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm')}</Text>
+                <Text style={{ color: "#fff", fontSize: 15, marginEnd: '4%' }}> {Moment(startDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm')}</Text>
                 <DateTimePicker
                   isVisible={isVisible}
                   mode="datetime"
@@ -257,10 +289,10 @@ export default class CreateEvent extends React.Component {
           <TouchableOpacity style={styles.dataView}
             onPress={() => this.setState({ isEndVisible: !this.state.isEndVisible })}
           >
-            <Text style={{ color: "#000", fontSize: 20 }}>Fim </Text>
+            <Text style={{ color: "#fff", fontSize: 20 }}>Fim </Text>
             {isEnabled ?
               <View>
-                <Text style={{ color: "#000", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('DD ' + '' + 'MMMM')}</Text>
+                <Text style={{ color: "#fff", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('DD ' + '' + 'MMMM')}</Text>
                 <DateTimePicker
                   isVisible={isEndVisible}
                   mode="date"
@@ -271,7 +303,7 @@ export default class CreateEvent extends React.Component {
               </View>
               :
               <View>
-                <Text style={{ color: "#000", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm')}</Text>
+                <Text style={{ color: "#fff", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm')}</Text>
                 <DateTimePicker
                   isVisible={isEndVisible}
                   mode="datetime"
@@ -284,13 +316,13 @@ export default class CreateEvent extends React.Component {
 
           </TouchableOpacity>
 
-
-
         </View>
-        <TouchableOpacity style={styles.dataView}
-          onPress={() => this.createEvent(value, description, location, Moment(startDate).format('YYYY-MM-DD'), endDate.toString())}>
-          <Text>Ola</Text>
-        </TouchableOpacity>
+        <View style={styles.createEventView}>
+          <TouchableOpacity style={styles.createEventBtn}>
+            <Button onPress={() => this.createEvent(value, description, location, Moment(startDate).format('YYYY-MM-DD'), endDate.toString())} 
+              title='Criar Evento' color='#FF8000'></Button>
+          </TouchableOpacity>
+        </View>
       </View>
 
     );

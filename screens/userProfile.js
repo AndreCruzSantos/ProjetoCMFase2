@@ -35,18 +35,20 @@ const styles = StyleSheet.create({
     },
     emailText : {
         justifyContent: 'flex-start',
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        color: '#FF8000',
+        fontSize: 20
     },
     text1: {
-        fontSize: 25,
+        fontSize: 30,
         fontWeight: 'bold',
         padding: 10,
         color: '#ffffff'
     },
     text2: {
-        fontSize: 15,
+        fontSize: 20,
         fontWeight: 'bold',
-        color: 'grey',
+        color: '#ffffff',
         marginLeft: 10
     },
     profileImage: {
@@ -60,17 +62,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         backgroundColor: '#fff',
-        width: '90%',
-        padding: 20,
-        paddingBottom: 22,
+        width: '50%',
+        padding: 15,
         borderRadius: 10,
         shadowOpacity: 80,
         elevation: 15,
-        marginTop: 20
+        marginTop: 50
     },
     resetText: {
         fontSize: 15,
-        color: '#818181',
+        color: '#FF8000',
         fontWeight: 'bold'
     },
     deleteText: {
@@ -82,32 +83,29 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         flexDirection: 'row',
         justifyContent: 'center',
-        backgroundColor: '#CE2525',
-        width: '90%',
-        padding: 20,
-        paddingBottom: 22,
+        backgroundColor: '#ff0000',
+        width: '50%',
+        padding: 15,
         borderRadius: 10,
         shadowOpacity: 80,
         elevation: 15,
-        marginTop: 20,
+        marginTop: 40,
     },
     logoutView: {
         alignSelf: 'center',
         flexDirection: 'row',
         justifyContent: 'center',
-        backgroundColor: '#000',
-        width: '90%',
-        padding: 20,
-        paddingBottom: 22,
+        backgroundColor: '#ffffff',
+        width: '50%',
+        padding: 15,
         borderRadius: 10,
         shadowOpacity: 80,
         elevation: 15,
-        marginTop: 20,
-        marginBottom: 40
+        marginTop: 40
     },
     logoutText: {
         fontSize: 15,
-        color: '#fff',
+        color: '#ff0000',
         fontWeight: 'bold'
     }
 });
@@ -116,12 +114,13 @@ export default class UserProfile extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            username : ''
+            username : '',
+            email: firebase.auth().currentUser.email
         };
     }
 
     getAuthUsername = () => {
-        firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+        firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
             if(snapshot.exists()){
                 snapshot.forEach((snap) => {
                     this.setState({
@@ -142,7 +141,7 @@ export default class UserProfile extends React.Component {
             <View style={styles.background}>
                 <ScrollView showsHorizontalScrollIndicator={false}>
                     <View style={styles.view1}>
-                        <Image source={require('../images/foto.png')} style={styles.profileImage}></Image>
+                        <Image source={require('../images/profile_image.png')} style={styles.profileImage}></Image>
                         <Text style={styles.text1}>{this.state.username}</Text>
                     </View>
                     <View style={styles.emailView}>
@@ -150,26 +149,26 @@ export default class UserProfile extends React.Component {
                             Email:
                         </Text>
                         <Text style={styles.text2}>
-                            diogopaneleiro@gmail.com
+                            {this.state.email}
                         </Text>
                     </View>
                     <View style={styles.emailView}>
                         <Text style={styles.emailText}>
-                            Password
+                            Password:
                         </Text>
                         <Text style={styles.text2}>
                             *********
                         </Text>
                     </View>
-                    <View style={styles.resetView}>
+                    <TouchableOpacity style={styles.resetView}>
                         <Text style={styles.resetText}>Reset Password</Text>
-                    </View>
-                    <View style={styles.deleteView}>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.deleteView}>
                         <Text style={styles.deleteText}>Delete Account</Text>
-                    </View>
-                    <View style={styles.logoutView}>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.logoutView}>
                         <Text style={styles.logoutText}>Logout</Text>
-                    </View>
+                    </TouchableOpacity>
                 </ScrollView>
             </View>
         );

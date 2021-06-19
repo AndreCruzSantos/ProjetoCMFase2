@@ -47,12 +47,14 @@ const styles = {
         fontSize: 20,
         fontWeight: "bold",
         marginTop: '10%',
-        marginLeft: '5.6%'
+        marginLeft: '5.6%',
+        color: '#fff'
     },
     normalText: {
         fontSize: 15,
         marginLeft: '6%',
         marginTop: '1%',
+        color: '#fff'
     },
     add: {
         marginLeft: '6%',
@@ -159,16 +161,19 @@ export default class EventPage extends React.Component {
         const { eventKey, notificationTime, isVisible, startTime, endTime, description } = this.state;
 
         return (
-            <View>
+            <View style={{
+                backgroundColor: '#2B2A2A',
+                flex: 1
+            }}>
 
                 <View style={styles.dataView}>
-                    <Text style={{ color: "#000", fontSize: 20 }}>Início </Text>
-                    <Text style={{ color: "#000", fontSize: 20, marginEnd: '4%' }}> {startTime}</Text>
+                    <Text style={{ color: "#fff", fontSize: 20 }}>Início </Text>
+                    <Text style={{ color: "#fff", fontSize: 20, marginEnd: '4%' }}> {startTime}</Text>
                 </View>
 
                 <View style={styles.dataView}>
-                    <Text style={{ color: "#000", fontSize: 20 }}>Fim </Text>
-                    <Text style={{ color: "#000", fontSize: 20, marginEnd: '4%' }}> {endTime}</Text>
+                    <Text style={{ color: "#fff", fontSize: 20 }}>Fim </Text>
+                    <Text style={{ color: "#fff", fontSize: 20, marginEnd: '4%' }}> {endTime}</Text>
                 </View>
 
                 <View>

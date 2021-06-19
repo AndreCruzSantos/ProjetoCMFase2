@@ -24,12 +24,8 @@ var firebaseConfig = {
   measurementId: "G-0V1ZQ3V6YD"
 };
 
-const name = {
-  name : 'DB_ANDRE'
-};
-
 if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig,name);
+  firebase.initializeApp(firebaseConfig);
 }
 
 export default class Login extends React.Component {
@@ -82,8 +78,8 @@ export default class Login extends React.Component {
         </View>
         <View style={styles.inputView}>
           <Image source={require("../images/lock.png")} style={styles.image}></Image>
-          <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={(pass) => {this.setState((prevState) => ({password : pass}))}}></TextInput>
-          {isChecked ? <Image style={styles.visibilityImage} source={require('../images/visibility.png')} onPress={this.setIsChecked}></Image> : <Image style={styles.visibilityImage} source={require('../images/visibility_off.png')} onPress={this.setIsChecked}></Image>}
+          <TextInput style={styles.input} placeholder="Password" secureTextEntry={!isChecked} onChangeText={(pass) => {this.setState((prevState) => ({password : pass}))}}></TextInput>
+          {isChecked ? <TouchableOpacity onPress={this.setIsChecked}><Image style={styles.visibilityImage} source={require('../images/visibility.png')}></Image></TouchableOpacity> : <TouchableOpacity onPress={this.setIsChecked}><Image style={styles.visibilityImage} source={require('../images/visibility_off.png')}></Image></TouchableOpacity>}
           
         </View>
         <Text style={styles.forgotPasswordTxt} onPress={this.goToForgotPassword}>
