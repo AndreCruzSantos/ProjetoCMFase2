@@ -62,12 +62,12 @@ export default class CalendarsScreen extends React.Component {
     }
 
     editCalendar = (key,text) => {
-        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(key).update({'title' : text}).then(
-            firebase.app('DB_ANDRE').database().ref().child('users').once('value').then(snapshot => {
+        firebase.database().ref().child('users').child(this.state.username).child('calendars').child(key).update({'title' : text}).then(
+            firebase.database().ref().child('users').once('value').then(snapshot => {
                 snapshot.forEach(snap => {
                     if(snap.key != this.state.username){
                         if(typeof snap.val().shareCalendars !== 'undefined'){
-                            firebase.app('DB_ANDRE').database().ref().child('users').child(snap.key).child('shareCalendars').child(key).update({'title' : text});
+                            firebase.database().ref().child('users').child(snap.key).child('shareCalendars').child(key).update({'title' : text});
                         }
                     }
                 });
@@ -93,15 +93,15 @@ export default class CalendarsScreen extends React.Component {
     copyCalendar = (key,name) => {
         var copyUsername = '';
         if(name.length != 0){
-            firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
+            firebase.database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
                 if(snapshot.exists()){
                     snapshot.forEach(elem => {
                         copyUsername = elem.key
                     });
-                    firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(key).once('value').then(snap => {
+                    firebase.database().ref().child('users').child(this.state.username).child('calendars').child(key).once('value').then(snap => {
                         if(snap.exists()){
                             console.log(snap.val())
-                            firebase.app('DB_ANDRE').database().ref().child('users').child(copyUsername).child('copiedCalendars').push().set(snap.val()).then();
+                            firebase.database().ref().child('users').child(copyUsername).child('copiedCalendars').push().set(snap.val()).then();
                         }
                     });
                 }
@@ -112,14 +112,14 @@ export default class CalendarsScreen extends React.Component {
     shareCalendar = (key,name) => {
         var copyUsername = '';
         if(name.length != 0){
-            firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
+            firebase.database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
                 if(snapshot.exists()){
                     snapshot.forEach(elem => {
                         copyUsername = elem.key
                     });
-                    firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(key).once('value').then(snap => {
+                    firebase.database().ref().child('users').child(this.state.username).child('calendars').child(key).once('value').then(snap => {
                         if(snap.exists()){
-                            firebase.app('DB_ANDRE').database().ref().child('users').child(copyUsername).child('shareCalendars').child(key).set(snap.val()).then();
+                            firebase.database().ref().child('users').child(copyUsername).child('shareCalendars').child(key).set(snap.val()).then();
                         }
                     });
                 }
@@ -145,7 +145,7 @@ export default class CalendarsScreen extends React.Component {
             });
             this.setState({ calendarsArr: newArr });
         }).then(
-            firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('copiedCalendars').once('value',snapshot => {
+            firebase.database().ref().child('users').child(this.state.username).child('copiedCalendars').once('value',snapshot => {
                 const copiedArr = [];
                 snapshot.forEach(snap => {
                     copiedArr.push({
@@ -156,7 +156,7 @@ export default class CalendarsScreen extends React.Component {
                 this.setState({copiedCalendarsArr : copiedArr});
             })
         ).then(
-            firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('shareCalendars').once('value',snapshot => {
+            firebase.database().ref().child('users').child(this.state.username).child('shareCalendars').once('value',snapshot => {
                 const sharedArr = [];
                 snapshot.forEach(snap => {
                     sharedArr.push({
@@ -170,7 +170,7 @@ export default class CalendarsScreen extends React.Component {
     }
 
     getAuthUsername = () => {
-        firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+        firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
             if (snapshot.exists()) {
                 snapshot.forEach((snap) => {
                     this.setState({
@@ -183,7 +183,7 @@ export default class CalendarsScreen extends React.Component {
     }
 
     deleteCalendar = (key,string) => {
-        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child(string).child(key).remove().then(
+        firebase.database().ref().child('users').child(this.state.username).child(string).child(key).remove().then(
             this.getAllCalendars()
         );
     }

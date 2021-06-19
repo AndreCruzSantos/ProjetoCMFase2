@@ -23,12 +23,6 @@ var firebaseConfig = {
     measurementId: "G-0V1ZQ3V6YD"
 };
 
-const name = {
-    name: 'DB_ANDRE'
-};
-
-
-    firebase.initializeApp(firebaseConfig, name);
 
 
 const styles = {
@@ -119,7 +113,7 @@ export default class EventPage extends React.Component {
     
 
     getAuthUsername = () => {
-        firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+        firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
             if (snapshot.exists()) {
                 snapshot.forEach((snap) => {
                     this.setState({
@@ -132,7 +126,7 @@ export default class EventPage extends React.Component {
     }
 
     loadEventInfo = () => {
-        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).once('value', snapshot => {
+        firebase.database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).once('value', snapshot => {
             this.setState({
                 startTime: Moment(snapshot.val().startDate).format('HH:mm'),
                 endTime: Moment(snapshot.val().endDate).format('HH:mm'),
@@ -154,7 +148,7 @@ export default class EventPage extends React.Component {
     }
 
     removeEvent = () => {
-        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).remove().then(this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey}}]}));
+        firebase.database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).remove().then(this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey}}]}));
     }
 
     render() {
