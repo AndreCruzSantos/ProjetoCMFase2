@@ -20,7 +20,8 @@ export default class ChangePasswordc extends React.Component {
     resetPassword = (password) => {
         auth().currentUser.updatePassword(password).then(() => {
             alert('Password alterada!');
-            this.props.navigation.navigate('Perfil');
+            this.props.navigation.reset({index:0, routes:[{name: 'Calendário'}]});
+            //this.props.navigation.navigate('Perfil');
         })
     }
 

@@ -135,6 +135,23 @@ export default class UserProfile extends React.Component {
         this.getAuthUsername();
     }
 
+    logout(){
+        auth().signOut().then(
+            this.props.navigation.reset({index:0, routes:[{name: 'Login'}]})
+        );
+        
+    }
+
+    deleteAccount(){
+        var user = firebase.auth().currentUser;
+        user.delete().then(
+            firebase.database().ref().child('users').child(this.state.username).remove().then(
+                this.props.navigation.reset({index:0, routes:[{name: 'Register'}]})
+            )
+        );
+        console.log('Account deleted');
+    }
+
     render(){
         console.log(firebase.apps);
         return (
@@ -160,13 +177,13 @@ export default class UserProfile extends React.Component {
                             *********
                         </Text>
                     </View>
-                    <TouchableOpacity style={styles.resetView}>
+                    <TouchableOpacity style={styles.resetView} onPress={() => this.props.navigation.navigate('ChangePassword')}>
                         <Text style={styles.resetText}>Reset Password</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.deleteView}>
+                    <TouchableOpacity style={styles.deleteView} onPress={() => this.deleteAccount()}>
                         <Text style={styles.deleteText}>Delete Account</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.logoutView}>
+                    <TouchableOpacity style={styles.logoutView} onPress={() => this.logout()}>
                         <Text style={styles.logoutText}>Logout</Text>
                     </TouchableOpacity>
                 </ScrollView>

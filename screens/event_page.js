@@ -23,12 +23,6 @@ var firebaseConfig = {
     measurementId: "G-0V1ZQ3V6YD"
 };
 
-const name = {
-    name: 'DB_ANDRE'
-};
-
-
-    firebase.initializeApp(firebaseConfig, name);
 
 
 const styles = {
@@ -70,7 +64,7 @@ export default class EventPage extends React.Component {
 
         this.state = {
             eventKey: props.route.params.eventKey,
-            notificationTime: new Date('December 25, 1995 12:00'),
+            notificationTime: new Date('June 25, 2021 12:00'),
             isVisible: false,
             startTime: '',
             endTime: '',
@@ -78,48 +72,14 @@ export default class EventPage extends React.Component {
             title: '',
             username: '',
             calendarKey: props.route.params.calendarKey,
+            calendarType: props.route.params.calendarType,
         }
 
-        /*EventPage.navigationOptions=({navigation}) =>{
-            return {
-                title: 'Teste',
-                headerStyle: {
-                    backgroundColor: 'green'
-                },
-                headerRight: () => (
-                <View style={styles.icons}>
-                    <TouchableOpacity style={{ right: '45%' }} onPress={() => navigation.navigate('Editar Evento')}>
-                        <Image style={{ height: 30, width: 30 }} source={require('../images/edit.png')}></Image>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ right: '35%' }} onPress={() => showConfirmDialog()}>
-                        <Image style={{ height: 30, width: 30 }} source={require('../images/trash.png')}></Image>
-                    </TouchableOpacity>
-                </View>
-                )
-            }
-        }*/
     }
-    
-    static navigationOptions = ({navigation}) => ({
-        title: 'OLÁ',
-        headerRight: (
-            <View style={styles.icons}>
-        <TouchableOpacity style={{ right: '45%' }} onPress={() => navigation.navigate('Editar Evento')}>
-            <Image style={{ height: 30, width: 30 }} source={require('../images/edit.png')}></Image>
-        </TouchableOpacity>
-        <TouchableOpacity style={{ right: '35%' }} onPress={() => showConfirmDialog()}>
-            <Image style={{ height: 30, width: 30 }} source={require('../images/trash.png')}></Image>
-        </TouchableOpacity>
-        </View>
-        )
-    })
-        
-    
-        
     
 
     getAuthUsername = () => {
-        firebase.app('DB_ANDRE').database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+        firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
             if (snapshot.exists()) {
                 snapshot.forEach((snap) => {
                     this.setState({
@@ -132,10 +92,10 @@ export default class EventPage extends React.Component {
     }
 
     loadEventInfo = () => {
-        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).once('value', snapshot => {
+        firebase.database().ref().child('users').child(this.state.username).child(this.state.calendarType).child(this.state.calendarKey).child('events').child(this.state.eventKey).once('value', snapshot => {
             this.setState({
                 startTime: Moment(snapshot.val().startDate).format('HH:mm'),
-                endTime: Moment(snapshot.val().endDate).format('HH:mm'),
+                endTime: snapshot.val().endDate,
                 description: snapshot.val().description, 
             });
         });
@@ -145,7 +105,6 @@ export default class EventPage extends React.Component {
         this.getAuthUsername();
     }
 
-
     handlePicker = (datetime) => {
         this.setState({
             isVisible: false,
@@ -154,7 +113,48 @@ export default class EventPage extends React.Component {
     }
 
     removeEvent = () => {
-        firebase.app('DB_ANDRE').database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).remove().then(this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey}}]}));
+        firebase.database().ref().child('users').child(this.state.username).child(this.state.calendarType).child(this.state.calendarKey).child('events').child(this.state.eventKey).remove()
+        .then(this.removeSharedEvent)
+        .then(this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey, calendarType: this.state.calendarType}}]}));
+    }
+
+    removeSharedEvent = () => {
+        if(this.state.calendarType == 'calendars'){
+            firebase.database().ref().child('users').once('value', snapshot =>{
+              snapshot.forEach(snap => {
+                if(snap.key != this.state.username){
+                  if(typeof snap.val().shareCalendars !== 'undefined'){
+                      firebase.database().ref().child('users').child(snap.key).child('shareCalendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).remove();
+                  }
+                }
+              });
+            });
+          }
+      
+          if(this.state.calendarType == 'shareCalendars'){
+            firebase.database().ref().child('users').once('value', snapshot =>{
+              snapshot.forEach(snap => {
+                if(snap.key != this.state.username){
+                  if(typeof snap.val().calendars !== 'undefined'){
+                    snap.forEach(s => {
+                      if(s.key == 'calendars'){
+                        s.forEach(e => {
+                          if(e.key == this.state.calendarKey){
+                            firebase.database().ref().child('users').child(snap.key).child('calendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).remove();
+
+                          }
+                        });
+                      }
+                    });
+                  }
+                  if(typeof snap.val().shareCalendars !== 'undefined'){
+                    firebase.database().ref().child('users').child(snap.key).child('shareCalendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).remove();
+
+                }
+                }
+              });
+            });
+          }
     }
 
     render() {
@@ -215,6 +215,12 @@ export default class EventPage extends React.Component {
                 </Text>
                     <TouchableOpacity style={styles.add} onPress={() => console.log(eventKey)}>
                         <Text style={{ color: "#2073f7" }}>Selecionar utilizadores</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Editar Evento', {calendarKey : this.state.calendarKey, eventKey : this.state.eventKey, calendarType: this.state.calendarType})}>
+                        <Text>editar</Text>
                     </TouchableOpacity>
                 </View>
 
