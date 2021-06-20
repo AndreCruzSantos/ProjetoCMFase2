@@ -18,7 +18,7 @@ if(!firebase.apps.length){
     firebase.initializeApp(firebaseConfig);
 }
 
-export default class CalendarsScreen extends React.Component {
+export default class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -212,16 +212,16 @@ export default class CalendarsScreen extends React.Component {
           }}>
             <ScrollView style={styles.scrollview}>
                 <View style={styles.calendarType}>
-                <View style={styles.category_btn}>
-                    <Text style={styles.category}>Meus Calendários</Text>
-                    <TouchableOpacity onPress={this.promptCreateCalendar}>
-                        <Image style={styles.btnbig} source={require('../images/add_orange.png')}></Image>
-                    </TouchableOpacity>
-                </View>
-                    {
-                        array.map(elem => {
-                            return(
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key, calendarType: 'calendars' } )}>    
+                    <View style={styles.category_btn}>
+                        <Text style={styles.category}>Meus Calendários</Text>
+                        <TouchableOpacity onPress={this.promptCreateCalendar}>
+                            <Image style={styles.btnbig} source={require('../images/add_orange.png')}></Image>
+                        </TouchableOpacity>
+                    </View>
+                        {
+                            array.map(elem => {
+                              return(
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendarPage',{ calendarKey: elem.key, calendarType: 'calendars'} )}>    
                                     <View style={styles.item_btn} key = {elem.key}>
                                         <Text style={styles.item}>{elem.title}</Text>
                                         <View style={styles.btns}>
@@ -237,17 +237,19 @@ export default class CalendarsScreen extends React.Component {
                                         </View>
                                     </View>
                                 </TouchableOpacity>
-                            )
-                        })
-                    }
+                              )
+                            })
+                        }
+                </View>
+                <View style={styles.calendarType}>
                     <View style={styles.category_btn}>
                         <Text style={styles.category}>Calendários Partilhados</Text>
                     </View>
-                    {
+                        {
                         copiedArray.map(elem => {
                             return(
                                 
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key, calendarType: 'copiedCalendars' } )}>    
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendarPage',{ calendarKey: elem.key, calendarType: 'copiedCalendars' } )}>    
                             <View style={styles.item_btn} key = {elem.key}>
                                 <Text style={styles.item}>{elem.title}</Text>
                                 <View style={styles.btns}>
@@ -260,13 +262,15 @@ export default class CalendarsScreen extends React.Component {
                             )
                         })
                     }
+                </View>
+                <View style={styles.calendarType}>
                     <View style={styles.category_btn}>
                         <Text style={styles.category}>Calendários Compartilhados</Text>
                     </View>
                     {
                         sharedArray.map(elem => {
                             return(  
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key, calendarType: 'shareCalendars'} )}>    
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendarPage',{ calendarKey: elem.key, calendarType: 'shareCalendars' } )}>    
                             <View style={styles.item_btn} key = {elem.key}>
                                 <Text style={styles.item}>{elem.title}</Text>
                                 <View style={styles.btns}>
@@ -282,7 +286,7 @@ export default class CalendarsScreen extends React.Component {
               </View>
             </ScrollView>
                 <TouchableOpacity activeOpacity={0.7}
-                    onPress={() => this.props.navigation.navigate('Perfil')}
+                    onPress={() => this.props.navigation.navigate('ProfilePage')}
                     style={styles.floatingBtn}>
                     <Image source={require('../images/profile_white.png')}></Image>
                 </TouchableOpacity>
@@ -300,7 +304,8 @@ var styles = {
         flex: 1
     },
     calendarType: {
-
+        marginTop: 5,
+        backgroundColor: '#383838'
     },
     category: {
         fontSize: 25,
@@ -310,9 +315,9 @@ var styles = {
     },
     item: {
         fontSize: 20,
-        color: '#ffb56b',
+        color: '#ffa042',
         marginLeft: 10,
-        textAlignVertical: "center"
+        textAlignVertical: "center",
     },
     btns: {
         flexDirection: 'row'
@@ -331,20 +336,22 @@ var styles = {
         flexDirection: 'row',
     },
     category_btn: {
-        marginTop: 20,
+        marginTop: 10,
+        marginBottom: 10,
         marginRight: 10,
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
     item_btn: {
-        marginTop: 10,
+        marginTop: 0,
         height: 40,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        backgroundColor: '#3f3f3f',
-        borderWidth: 1,
+        backgroundColor: '#333333',
+        borderWidth: 2,
         borderRadius: 10,
-        borderColor: '#000000'
+        borderColor: '#000000',
+        marginBottom: 5,
     },
     floatingBtn: {
         position: 'absolute',
@@ -353,6 +360,8 @@ var styles = {
         right: 30,
         bottom: 30,
         borderRadius: 100,
-        backgroundColor: 'orange',
+        borderWidth: 1,
+        borderColor: '#FFFFFF',
+        backgroundColor: '#FF8000',
     }
 }

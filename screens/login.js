@@ -7,6 +7,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Alert
 } from 'react-native';
 
 import firebase from '@react-native-firebase/app';
@@ -39,28 +40,33 @@ export default class Login extends React.Component {
   }
 
   signIn = (email,password) => {
-    auth().signInWithEmailAndPassword(email,password).then(() => {
-      console.log('User account created & signed in!');
-      this.props.navigation.reset({index:0, routes:[{name: 'Calendário'}]});
-    })
-    .catch(error => {
-      if (error.code === 'auth/email-already-in-use') {
-        console.log('That email address is already in use!');
-      }
-  
-      if (error.code === 'auth/invalid-email') {
-        console.log('That email address is invalid!');
-      }
-      console.error(error);
-    });
+    if(email.length == 0 || password.length == 0){
+      Alert.alert("Preencha todos os campos.");
+    }
+    else{
+      auth().signInWithEmailAndPassword(email,password).then(() => {
+        console.log('User account created & signed in!');
+        this.props.navigation.navigate('HomePage');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          //console.log('That email address is already in use!');
+        }
+        if (error.code === 'auth/invalid-email') {
+          //console.log('That email address is invalid!');
+        }
+        //console.error(error);
+        Alert.alert("Email e/ou password incorreto(s)");
+      });
+    }
   }
 
   goToRegister = () => {
-    this.props.navigation.navigate('Register');
+    this.props.navigation.navigate('RegisterPage');
   }
 
   goToForgotPassword = () => {
-    this.props.navigation.navigate('ForgotPassword');
+    this.props.navigation.navigate('ForgotPasswordPage');
   }
 
   setIsChecked = () => {
@@ -87,7 +93,7 @@ export default class Login extends React.Component {
         </Text>
         <TouchableOpacity onPress={() => this.signIn(email,password)} style={styles.signInBtn}>
           <Text style={styles.signInText}>
-            Iniciar Sessão
+            Iniciar sessão
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.registerBtn} onPress={this.goToRegister}>
@@ -157,6 +163,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   logo: {
+    marginTop: 75,
     width: 230,
     height: 230
   },

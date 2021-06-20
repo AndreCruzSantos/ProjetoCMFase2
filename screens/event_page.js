@@ -4,7 +4,8 @@ import {
     Text,
     TouchableOpacity,
     Image,
-    Alert
+    Alert,
+    Button
 } from 'react-native';
 
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -55,6 +56,38 @@ const styles = {
         marginTop: '1%',
         color: "#2073f7"
     },
+    createEventView: {
+        alignItems: 'center',
+        marginTop: 100
+      },
+      createEventBtn: {
+        justifyContent: 'space-between',
+        flexDirection: 'row'
+      },
+      btnView1: {
+        alignSelf: 'center',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        backgroundColor: '#fff',
+        width: '50%',
+        padding: 15,
+        borderRadius: 10,
+        shadowOpacity: 80,
+        elevation: 15,
+        marginTop: 50
+    },
+    btnView2: {
+        alignSelf: 'center',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        backgroundColor: '#FF8000',
+        width: '50%',
+        padding: 15,
+        borderRadius: 10,
+        shadowOpacity: 80,
+        elevation: 15,
+        marginTop: 50
+    }
 }
 
 
@@ -218,15 +251,14 @@ export default class EventPage extends React.Component {
                     </TouchableOpacity>
                 </View>
 
-                <View>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Editar Evento', {calendarKey : this.state.calendarKey, eventKey : this.state.eventKey, calendarType: this.state.calendarType})}>
-                        <Text>editar</Text>
+                <View style={styles.btnView1}>
+                    <TouchableOpacity style={styles.createEventBtn} onPress={() => this.props.navigation.navigate('Editar Evento', {calendarKey: this.state.calendarKey, eventKey: this.state.eventKey, calendarType: this.state.calendarType})}>
+                        <Text style={{ color: "#FF8000" }}>Editar Evento</Text>
                     </TouchableOpacity>
                 </View>
-
-                <View>
-                    <TouchableOpacity onPress={this.removeEvent}>
-                        <Text>remover</Text>
+                <View style={styles.btnView2}>
+                    <TouchableOpacity style={styles.createEventBtn} onPress={this.removeEvent}>
+                        <Text style={{ color: "#ffffff" }}>Remover Evento</Text>
                     </TouchableOpacity>
                 </View>
 

@@ -170,7 +170,7 @@ export default class CreateEvent extends React.Component {
         "title": title, "description": desc, "location": locat,
         "startDate": sDate, "endDate": eDate
       }).then(this.createSharedEvent(title, desc, locat, sDate, eDate, key));
-      this.props.navigation.reset({index:1, routes:[{name: 'Calendário'},{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey, calendarType: this.state.calendarType}}]});
+      this.props.navigation.reset({index:0, routes:[{name: 'CalendarPage', params: {calendarKey: this.state.calendarKey}}]});
     } else {
       Alert.alert('Todos os campos têm de estar preenchidos.');
     }
@@ -275,7 +275,7 @@ export default class CreateEvent extends React.Component {
               fontSize: 20,
               color: '#fff'
             }}>Escolher localização no mapa: </Text>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Map')}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('MapPage')}>
               <Image style={styles.image} source={require('../images/map_white.png')}></Image>
             </TouchableOpacity>
           </View>

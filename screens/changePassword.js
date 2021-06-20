@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
-export default class ChangePasswordc extends React.Component {
+export default class ChangePassword extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,8 +20,7 @@ export default class ChangePasswordc extends React.Component {
     resetPassword = (password) => {
         auth().currentUser.updatePassword(password).then(() => {
             alert('Password alterada!');
-            this.props.navigation.reset({index:0, routes:[{name: 'Calendário'}]});
-            //this.props.navigation.navigate('Perfil');
+            this.props.navigation.navigate('ProfilePage');
         })
     }
 

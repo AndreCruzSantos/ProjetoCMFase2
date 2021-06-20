@@ -4,15 +4,16 @@ import Login from "./screens/login.js"
 import Register from "./screens/register.js"
 import { NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator} from '@react-navigation/stack';
-import CalendarsScreen from './screens/Home';
+import Home from './screens/home';
 import CreateEvent from './screens/create_event';
 import UserProfile from './screens/userProfile';
-import EventPage from './screens/event_page';
+import Event from './screens/event_page';
 import EditEvent from './screens/edit_event';
 import Calendar from './screens/calendar';
 import ForgotPassword from './screens/forgotPassword';
-import changePassword from './screens/changePassword';
-import MapScreen from './screens/map';
+import ChangePassword from './screens/changePassword';
+import SelectMap from './screens/map';
+import { StatusBar } from 'react-native';
 
 
 const Stack = createStackNavigator();
@@ -20,19 +21,20 @@ const Stack = createStackNavigator();
 const App: () => Node = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="CalendárioTeste" component={Calendar}></Stack.Screen>
-        <Stack.Screen name="Criar Evento" component={CreateEvent}></Stack.Screen>
-        <Stack.Screen name="Página Evento" component={EventPage}></Stack.Screen>
-        <Stack.Screen name="Login" component={Login}></Stack.Screen>
-        <Stack.Screen name="Register" component={Register}></Stack.Screen>
-        <Stack.Screen name="ChangePassword" component={changePassword}></Stack.Screen>
-        <Stack.Screen name="Calendário" component={CalendarsScreen}></Stack.Screen>
-        <Stack.Screen name="Editar Evento" component={EditEvent}></Stack.Screen>
-        <Stack.Screen name="Perfil" component={UserProfile}></Stack.Screen>
-        <Stack.Screen name="ForgotPassword" component={ForgotPassword}></Stack.Screen>
-        <Stack.Screen name="Map" component={MapScreen}></Stack.Screen>
+      <Stack.Navigator initialRouteName="LoginPage">
+        <Stack.Screen name="CalendarPage" component={Calendar} options={{title: 'Calendário', headerStyle: { backgroundColor: '#FF8000' }, headerTintColor: '#FFFFFF'}}></Stack.Screen>
+        <Stack.Screen name="CreateEventPage" component={CreateEvent} options={{title: 'Criar um Evento', headerStyle: { backgroundColor: '#FF8000' }, headerTintColor: '#FFFFFF'}}></Stack.Screen>
+        <Stack.Screen name="EventPage" component={Event} options={{title: 'Página do Evento', headerStyle: { backgroundColor: '#FF8000' }, headerTintColor: '#FFFFFF'}}></Stack.Screen>
+        <Stack.Screen name="LoginPage" component={Login} options={{headerShown: false, title: 'Login', headerStyle: { backgroundColor: '#FF8000' }, headerTintColor: '#FFFFFF'}}></Stack.Screen>
+        <Stack.Screen name="RegisterPage" component={Register} options={{headerShown: false, title: 'Registar', headerStyle: { backgroundColor: '#FF8000' }, headerTintColor: '#FFFFFF'}}></Stack.Screen>
+        <Stack.Screen name="ChangePasswordPage" component={ChangePassword} options={{title: 'Alterar a Password', headerStyle: { backgroundColor: '#FF8000' }, headerTintColor: '#FFFFFF'}}></Stack.Screen>
+        <Stack.Screen name="HomePage" component={Home} options={{title: 'Página Principal', headerStyle: { backgroundColor: '#FF8000' }, headerTintColor: '#FFFFFF'}}></Stack.Screen>
+        <Stack.Screen name="EditEventPage" component={EditEvent} options={{title: 'Editar o Evento', headerStyle: { backgroundColor: '#FF8000' }, headerTintColor: '#FFFFFF'}}></Stack.Screen>
+        <Stack.Screen name="ProfilePage" component={UserProfile} options={{title: 'Perfil', headerStyle: { backgroundColor: '#FF8000' }, headerTintColor: '#FFFFFF'}}></Stack.Screen>
+        <Stack.Screen name="ForgotPasswordPage" component={ForgotPassword} options={{headerShown: false, title: 'Recuperar a Password', headerStyle: { backgroundColor: '#FF8000' }, headerTintColor: '#FFFFFF'}}></Stack.Screen>
+        <Stack.Screen name="MapPage" component={SelectMap} options={{title: 'Selecione uma Localização', headerStyle: { backgroundColor: '#FF8000' }, headerTintColor: '#FFFFFF'}}></Stack.Screen>
       </Stack.Navigator>
+      <StatusBar backgroundColor='#2B2A2A' barStyle='light-content' />
     </NavigationContainer>
   );
 };
