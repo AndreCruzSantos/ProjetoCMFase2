@@ -14,6 +14,7 @@ import {
 import { Calendars, CalendarList, Agenda } from 'react-native-calendars';
 import firebase from '@react-native-firebase/app';
 import database from '@react-native-firebase/database';
+import Moment from 'moment';
 
 var firebaseConfig = {
     apiKey: "AIzaSyAxdWpiRdhn2B_INeYWAqaS0K9awbJMyOM",
@@ -66,7 +67,8 @@ export default class Calendar extends React.Component {
         const ola = firebase.database().ref().child('users').child(this.state.username).child(this.state.calendarType).child(this.state.calendarKey).child('events');
         const teste = ola.on('value', snapshot => {
             snapshot.forEach(snap => {
-                const key = snap.val().startDate;
+
+                const key = Moment(snap.val().startDate).format('YYYY-MM-DD');
                 if (!this.state.items[key]) {
                     this.state.items[key] = [];
                     this.state.items[key].push({
@@ -79,7 +81,6 @@ export default class Calendar extends React.Component {
                     });
                 } else {
                     if (snap.val().startDate == key) {
-
                         this.state.items[key].push({
                             key: snap.key,
                             title: snap.val().title,
@@ -111,16 +112,8 @@ export default class Calendar extends React.Component {
     }
 
     componentDidMount() {
-        //this.getAuthUsername();
         this.props.navigation.addListener('focus', () => { this.getAuthUsername()});
     }
-
-    componentWillUnmount() {
-        const { ref, callB, items } = this.state;
-        ref.off('value', callB);
-        //items=null;
-    }
-
 
 
     render() {
@@ -152,33 +145,6 @@ export default class Calendar extends React.Component {
         );
     }
 
-    loadItems(day) {
-        setTimeout(() => {
-            for (let i = -15; i < 85; i++) {
-
-                const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-
-                const strTime = this.timeToString(time);
-                if (!this.state.items[strTime]) {
-                    this.state.items[strTime] = [];
-                    const numItems = Math.floor(Math.random() * 3 + 1);
-                    for (let j = 0; j < numItems; j++) {
-                        this.state.items[strTime].push({
-                            name: 'Item for ' + strTime + ' #' + j,
-                            height: Math.max(50, Math.floor(Math.random() * 150))
-                        });
-                    }
-                }
-            }
-            const newItems = {};
-            Object.keys(this.state.items).forEach(key => {
-                newItems[key] = this.state.items[key];
-            });
-            this.setState({
-                items: newItems
-            });
-        }, 1000);
-    }
 
     renderItem(item) {
         return (
@@ -187,6 +153,7 @@ export default class Calendar extends React.Component {
                 onPress={() => this.props.navigation.navigate('Página Evento', { eventKey: item.key, calendarKey: this.state.calendarKey, calendarType: this.state.calendarType })}
             >
                 <Text>{item.title}</Text>
+                <Text>{Moment(item.startDate).format('HH:mm') + ' - ' + item.endDate}</Text>
             </TouchableOpacity>
         );
     }

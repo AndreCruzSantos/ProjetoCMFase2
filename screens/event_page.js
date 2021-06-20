@@ -64,7 +64,7 @@ export default class EventPage extends React.Component {
 
         this.state = {
             eventKey: props.route.params.eventKey,
-            notificationTime: new Date('December 25, 1995 12:00'),
+            notificationTime: new Date('June 25, 2021 12:00'),
             isVisible: false,
             startTime: '',
             endTime: '',
@@ -95,7 +95,7 @@ export default class EventPage extends React.Component {
         firebase.database().ref().child('users').child(this.state.username).child(this.state.calendarType).child(this.state.calendarKey).child('events').child(this.state.eventKey).once('value', snapshot => {
             this.setState({
                 startTime: Moment(snapshot.val().startDate).format('HH:mm'),
-                endTime: Moment(snapshot.val().endDate).format('HH:mm'),
+                endTime: snapshot.val().endDate,
                 description: snapshot.val().description, 
             });
         });
@@ -113,7 +113,6 @@ export default class EventPage extends React.Component {
     }
 
     removeEvent = () => {
-        console.log('Ola');
         firebase.database().ref().child('users').child(this.state.username).child(this.state.calendarType).child(this.state.calendarKey).child('events').child(this.state.eventKey).remove()
         .then(this.removeSharedEvent)
         .then(this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey, calendarType: this.state.calendarType}}]}));

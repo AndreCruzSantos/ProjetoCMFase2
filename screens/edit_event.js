@@ -139,7 +139,7 @@ loadEventInfo = () => {
           description : snapshot.val().description,
           location: snapshot.val().location,
           startDate: Moment(snapshot.val().startDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm'),
-          endDate: Moment(snapshot.val().endDate),
+          endDate: Moment(snapshot.val().endDate).format('HH:mm'),
       });
   });
 }
@@ -153,7 +153,7 @@ loadEventInfo = () => {
         'startDate': sDate,
         'endDate': eDate,
       }).then(this.updateShareCalendar(title, desc, locat, sDate, eDate));
-      this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey, calendarType: this.state.calendarType}}]});
+      this.props.navigation.reset({index:1, routes:[{name: 'Calendário'},{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey, calendarType: this.state.calendarType}}]});
     } else {
       Alert.alert('Todos os campos têm de estar preenchidos.');
     }
@@ -320,10 +320,10 @@ loadEventInfo = () => {
             <Text style={{ color: "#fff", fontSize: 20 }}>Fim </Text>
             {isEnabled ?
               <View>
-                <Text style={{ color: "#fff", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('DD ' + '' + 'MMMM')}</Text>
+                <Text style={{ color: "#fff", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('HH:mm')}</Text>
                 <DateTimePicker
                   isVisible={isEndVisible}
-                  mode="date"
+                  mode="time"
                   display="spinner"
                   onConfirm={this.handleEndPicker}
                   onCancel={() => this.setState({ isEndVisible: false })}
@@ -331,10 +331,10 @@ loadEventInfo = () => {
               </View>
               :
               <View>
-                <Text style={{ color: "#fff", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm')}</Text>
+                <Text style={{ color: "#fff", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('HH:mm')}</Text>
                 <DateTimePicker
                   isVisible={isEndVisible}
-                  mode="datetime"
+                  mode="time"
                   display="spinner"
                   onConfirm={this.handleEndPicker}
                   onCancel={() => this.setState({ isEndVisible: false })}
@@ -347,7 +347,7 @@ loadEventInfo = () => {
         </View>
         <View style={styles.createEventView}>
           <TouchableOpacity style={styles.createEventBtn}>
-            <Button onPress={() => this.updateEvent(value, description, location, Moment(startDate).format('YYYY-MM-DD'), endDate.toString(), 'calendars')} 
+            <Button onPress={() => this.updateEvent(value, description, location, Moment(startDate).format('YYYY-MM-DD HH:mm'), Moment(endDate).format('HH:mm'))} 
               title='Atualizar Evento' color='#FF8000'></Button>
           </TouchableOpacity>
         </View>
