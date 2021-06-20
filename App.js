@@ -4,7 +4,7 @@ import Login from "./screens/login.js"
 import Register from "./screens/register.js"
 import { NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator} from '@react-navigation/stack';
-import Home from './screens/home';
+import Home from './screens/Home';
 import CreateEvent from './screens/create_event';
 import UserProfile from './screens/userProfile';
 import Event from './screens/event_page';

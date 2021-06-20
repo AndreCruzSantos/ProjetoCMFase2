@@ -137,7 +137,7 @@ export default class UserProfile extends React.Component {
 
     logout(){
         auth().signOut().then(
-            this.props.navigation.reset({index:0, routes:[{name: 'Login'}]})
+            this.props.navigation.reset({index:0, routes:[{name: 'LoginPage'}]})
         );
         
     }
@@ -146,14 +146,13 @@ export default class UserProfile extends React.Component {
         var user = firebase.auth().currentUser;
         user.delete().then(
             firebase.database().ref().child('users').child(this.state.username).remove().then(
-                this.props.navigation.reset({index:0, routes:[{name: 'Register'}]})
+                this.props.navigation.reset({index:0, routes:[{name: 'RegisterPage'}]})
             )
         );
-        console.log('Account deleted');
+        Alert.alert('Conta apagada com sucesso');
     }
 
     render(){
-        console.log(firebase.apps);
         return (
             <View style={styles.background}>
                 <ScrollView showsHorizontalScrollIndicator={false}>
@@ -177,7 +176,7 @@ export default class UserProfile extends React.Component {
                             *********
                         </Text>
                     </View>
-                    <TouchableOpacity style={styles.resetView} onPress={() => this.props.navigation.navigate('ChangePassword')}>
+                    <TouchableOpacity style={styles.resetView} onPress={() => this.props.navigation.navigate('ChangePasswordPage')}>
                         <Text style={styles.resetText}>Reset Password</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.deleteView} onPress={() => this.deleteAccount()}>

@@ -90,8 +90,6 @@ export default class Calendar extends React.Component {
                             endDate: snap.val().endDate
                         });
 
-
-
                     }
                 }
 
@@ -102,9 +100,7 @@ export default class Calendar extends React.Component {
                 newItems[key] = this.state.items[key];
             });
             this.setState({
-                items: newItems,
-                ref: ola,
-                callB: teste,
+                items: newItems
             });
         });
 

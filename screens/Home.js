@@ -79,7 +79,7 @@ export default class Home extends React.Component {
         prompt('Utilizador a partilhar', 'Escolha o utilizador a partilhar o calendário!', 
             [
                 {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: 'Cópia', onPress: username => this.copyCalendar(key,username), style: 'ok'},
+                {text: 'Cópia', onPress: name => this.copyCalendar(key,name), style: 'ok'},
                 {text: 'Compartilhar', onPress: username => this.shareCalendar(key,username), style: 'ok'}
             ],
             {
@@ -92,6 +92,7 @@ export default class Home extends React.Component {
 
     copyCalendar = (key,name) => {
         var copyUsername = '';
+        console.log(name);
         if(name.length != 0){
             firebase.database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
                 if(snapshot.exists()){
@@ -100,7 +101,6 @@ export default class Home extends React.Component {
                     });
                     firebase.database().ref().child('users').child(this.state.username).child('calendars').child(key).once('value').then(snap => {
                         if(snap.exists()){
-                            console.log(snap.val())
                             firebase.database().ref().child('users').child(copyUsername).child('copiedCalendars').push().set(snap.val()).then();
                         }
                     });
@@ -111,6 +111,7 @@ export default class Home extends React.Component {
 
     shareCalendar = (key,name) => {
         var copyUsername = '';
+        console.log(name);
         if(name.length != 0){
             firebase.database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
                 if(snapshot.exists()){

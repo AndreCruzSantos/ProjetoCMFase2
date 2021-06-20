@@ -50,7 +50,7 @@ class FloatingLabelInput extends Component {
       left: 0,
       top: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],
-        outputRange: [18, 0],
+        outputRange: [10, 5],
       }),
       fontSize: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],
@@ -58,17 +58,17 @@ class FloatingLabelInput extends Component {
       }),
       color: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],
-        outputRange: ['#000', '#000'],
+        outputRange: ['#fff', '#fff'],
       }),
     };
     return (
-      <View style={{ paddingTop: 18 }}>
+      <View style={{ paddingTop: 20 }}>
         <Animated.Text style={labelStyle}>
           {label}
         </Animated.Text>
         <TextInput
           {...props}
-          style={{ height: 39, fontSize: 15, color: '#000', borderBottomWidth: 1, borderBottomColor: '#555' }}
+          style={{ height: 39, fontSize: 15, color: '#fff', borderBottomWidth: 1, borderBottomColor: '#555' }}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           blurOnSubmit
@@ -88,10 +88,24 @@ var styles = {
     justifyContent: 'space-between'
   },
   dataView: {
-    marginLeft: '6%',
+    marginLeft: '5%',
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
+  image: {
+    width: 25,
+    height: 25,
+    marginTop: 12,
+    marginLeft: 10
+  },
+  createEventView: {
+    alignItems: 'center',
+    marginTop: 100
+  },
+  createEventBtn: {
+    justifyContent: 'space-between',
+    flexDirection: 'row'
+  }
 }
 
 export default class EditEvent extends React.Component {
@@ -153,7 +167,7 @@ loadEventInfo = () => {
         'startDate': sDate,
         'endDate': eDate,
       }).then(this.updateShareCalendar(title, desc, locat, sDate, eDate));
-      this.props.navigation.reset({index:1, routes:[{name: 'Calendário'},{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey, calendarType: this.state.calendarType}}]});
+      this.props.navigation.reset({index:1, routes:[{name: 'HomePage'},{name: 'CalendarPage', params: {calendarKey: this.state.calendarKey, calendarType: this.state.calendarType}}]});
     } else {
       Alert.alert('Todos os campos têm de estar preenchidos.');
     }

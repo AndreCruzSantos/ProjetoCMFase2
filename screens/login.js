@@ -46,7 +46,7 @@ export default class Login extends React.Component {
     else{
       auth().signInWithEmailAndPassword(email,password).then(() => {
         console.log('User account created & signed in!');
-        this.props.navigation.navigate('HomePage');
+        this.props.navigation.reset({index:0, routes:[{name: 'HomePage'}]});
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {

@@ -148,7 +148,7 @@ export default class EventPage extends React.Component {
     removeEvent = () => {
         firebase.database().ref().child('users').child(this.state.username).child(this.state.calendarType).child(this.state.calendarKey).child('events').child(this.state.eventKey).remove()
         .then(this.removeSharedEvent)
-        .then(this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey, calendarType: this.state.calendarType}}]}));
+        .then(this.props.navigation.reset({index:1, routes:[{name: 'HomePage'},{name: 'CalendarPage', params: {calendarKey: this.state.calendarKey, calendarType: this.state.calendarType}}]}));
     }
 
     removeSharedEvent = () => {
@@ -252,7 +252,7 @@ export default class EventPage extends React.Component {
                 </View>
 
                 <View style={styles.btnView1}>
-                    <TouchableOpacity style={styles.createEventBtn} onPress={() => this.props.navigation.navigate('Editar Evento', {calendarKey: this.state.calendarKey, eventKey: this.state.eventKey, calendarType: this.state.calendarType})}>
+                    <TouchableOpacity style={styles.createEventBtn} onPress={() => this.props.navigation.navigate('EditEventPage', {calendarKey: this.state.calendarKey, eventKey: this.state.eventKey, calendarType: this.state.calendarType})}>
                         <Text style={{ color: "#FF8000" }}>Editar Evento</Text>
                     </TouchableOpacity>
                 </View>

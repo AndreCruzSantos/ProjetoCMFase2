@@ -158,10 +158,6 @@ export default class CreateEvent extends React.Component {
     });
   }
 
-  compareDates = (date) => {
-    return date.minutes() + date.hours() * 60;
-  }
-
   createEvent = (title, desc, locat, sDate, eDate) => {
     if (title.length != 0 && desc.length != 0 && locat.length != 0) {
       const ref = firebase.database().ref().child('users').child(this.state.username).child(this.state.calendarType).child(this.state.calendarKey).child('events').push()
@@ -170,7 +166,7 @@ export default class CreateEvent extends React.Component {
         "title": title, "description": desc, "location": locat,
         "startDate": sDate, "endDate": eDate
       }).then(this.createSharedEvent(title, desc, locat, sDate, eDate, key));
-      this.props.navigation.reset({index:0, routes:[{name: 'CalendarPage', params: {calendarKey: this.state.calendarKey}}]});
+      this.props.navigation.reset({index:1, routes:[{name: 'HomePage'},{name: 'CalendarPage', params: {calendarKey: this.state.calendarKey, calendarType: this.state.calendarType}}]});
     } else {
       Alert.alert('Todos os campos têm de estar preenchidos.');
     }
