@@ -7,7 +7,8 @@ import {
   Switch,
   TouchableOpacity,
   Image,
-  Alert
+  Alert,
+  Button,
 } from 'react-native';
 
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -106,26 +107,103 @@ export default class EditEvent extends React.Component {
       isVisible: false,
       endDate: new Date(),
       isEndVisible: false,
+      calendarKey: props.route.params.calendarKey,
+      eventKey:  props.route.params.eventKey,
+      username: '',
+      calendarType: props.route.params.calendarType,
     };
 
   }
 
-  /*createEvent = (title, desc, locat, sDate, eDate) => {
-    if (title.length != 0 && desc.length != 0 && locat.length != 0) {
-      firebase.database().ref().child('events').push().set({
-        "title": title, "description": desc, "location": locat,
-        "startDate": sDate, "endDate": eDate
+  componentDidMount(){
+    this.getAuthUsername();
+  }
+
+  getAuthUsername = () => {
+    firebase.database().ref().child('users').orderByChild('email').equalTo(firebase.auth().currentUser.email).once('value').then(snapshot => {
+        if (snapshot.exists()) {
+            snapshot.forEach((snap) => {
+                this.setState({
+                    username: snap.key
+                });
+            });
+        }
+        this.loadEventInfo();
+    });
+}
+
+loadEventInfo = () => {
+  firebase.database().ref().child('users').child(this.state.username).child(this.state.calendarType).child(this.state.calendarKey).child('events').child(this.state.eventKey).once('value', snapshot => {
+      this.setState({
+          value: snapshot.val().title,
+          description : snapshot.val().description,
+          location: snapshot.val().location,
+          startDate: Moment(snapshot.val().startDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm'),
+          endDate: Moment(snapshot.val().endDate),
       });
-      this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste'}]});
+  });
+}
+
+  updateEvent = (title, desc, locat, sDate, eDate) => {
+    if (title.length != 0 && desc.length != 0 && locat.length != 0) {
+      firebase.database().ref().child('users').child(this.state.username).child(this.state.calendarType).child(this.state.calendarKey).child('events').child(this.state.eventKey).update({
+        'title': title,
+        'description': desc,
+        'location': locat,
+        'startDate': sDate,
+        'endDate': eDate,
+      }).then(this.updateShareCalendar(title, desc, locat, sDate, eDate));
+      this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey, calendarType: this.state.calendarType}}]});
     } else {
       Alert.alert('Todos os campos têm de estar preenchidos.');
     }
-  }*/
-
-  updateEvent = () => {
-      
   }
 
+  updateShareCalendar = (title, desc, locat, sDate, eDate) => {
+    if(this.state.calendarType == 'calendars'){
+      firebase.database().ref().child('users').once('value', snapshot =>{
+        snapshot.forEach(snap => {
+          if(snap.key != this.state.username){
+            if(typeof snap.val().shareCalendars !== 'undefined'){
+                firebase.database().ref().child('users').child(snap.key).child('shareCalendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).update({
+                  "title": title, "description": desc, "location": locat,
+                  "startDate": sDate, "endDate": eDate
+                });
+            }
+          }
+        });
+      });
+    }
+
+    if(this.state.calendarType == 'shareCalendars'){
+      firebase.database().ref().child('users').once('value', snapshot =>{
+        snapshot.forEach(snap => {
+          if(snap.key != this.state.username){
+            if(typeof snap.val().calendars !== 'undefined'){
+              snap.forEach(s => {
+                if(s.key == 'calendars'){
+                  s.forEach(e => {
+                    if(e.key == this.state.calendarKey){
+                      firebase.database().ref().child('users').child(snap.key).child('calendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).update({
+                        "title": title, "description": desc, "location": locat,
+                        "startDate": sDate, "endDate": eDate
+                      });
+                    }
+                  });
+                }
+              });
+            }
+            if(typeof snap.val().shareCalendars !== 'undefined'){
+              firebase.database().ref().child('users').child(snap.key).child('shareCalendars').child(this.state.calendarKey).child('events').child(this.state.eventKey).update({
+                "title": title, "description": desc, "location": locat,
+                "startDate": sDate, "endDate": eDate
+              });
+          }
+          }
+        });
+      });
+    }
+  }
 
   handlePicker = (datetime) => {
     this.setState({
@@ -143,8 +221,14 @@ export default class EditEvent extends React.Component {
 
   render() {
     const { value, description, location, isEnabled, startDate, isVisible, endDate, isEndVisible } = this.state;
+    var params = this.props.route.params;
+    this.state.location = (params.lat && params.long) ? params.lat + ":" + params.long : "";
+    
     return (
-      <View>
+      <View style={{
+        backgroundColor: '#2B2A2A',
+        flex: 1
+      }}>
 
         <View style={{ margin: 20 }}>
 
@@ -152,7 +236,6 @@ export default class EditEvent extends React.Component {
             label="Título"
             value={value}
             onChangeText={(title) => { this.setState((prevState) => ({ value: title })) }}
-
           />
 
 
@@ -167,12 +250,24 @@ export default class EditEvent extends React.Component {
             value={location}
             onChangeText={(loc) => { this.setState((prevState) => ({ location: loc })) }}
           />
+          <View style={{
+            flexDirection: 'row'
+          }}>
+            <Text style={{
+              marginTop: 10,
+              fontSize: 20,
+              color: '#fff'
+            }}>Escolher localização no mapa: </Text>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Map')}>
+              <Image style={styles.image} source={require('../images/map_white.png')}></Image>
+            </TouchableOpacity>
+          </View>
 
         </View>
 
 
         <View style={styles.switchView}>
-          <Text style={{ color: "#000", fontSize: 20 }}>
+          <Text style={{ color: "#fff", fontSize: 20 }}>
             O dia todo
                     </Text>
           <Switch style={{ marginEnd: '4%' }}
@@ -189,10 +284,10 @@ export default class EditEvent extends React.Component {
             onPress={() => this.setState({ isVisible: !this.state.isVisible })}
           >
 
-            <Text style={{ color: "#000", fontSize: 20 }}>Início </Text>
+            <Text style={{ color: "#fff", fontSize: 20 }}>Início </Text>
             {isEnabled ?
               <View>
-                <Text style={{ color: "#000", fontSize: 15, marginEnd: '4%' }}> {Moment(startDate).format('DD ' + '' + 'MMMM')}</Text>
+                <Text style={{ color: "#fff", fontSize: 15, marginEnd: '4%' }}> {Moment(startDate).format('DD ' + '' + 'MMMM')}</Text>
                 <DateTimePicker
                   isVisible={isVisible}
                   mode="date"
@@ -203,7 +298,7 @@ export default class EditEvent extends React.Component {
               </View>
               :
               <View>
-                <Text style={{ color: "#000", fontSize: 15, marginEnd: '4%' }}> {Moment(startDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm')}</Text>
+                <Text style={{ color: "#fff", fontSize: 15, marginEnd: '4%' }}> {Moment(startDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm')}</Text>
                 <DateTimePicker
                   isVisible={isVisible}
                   mode="datetime"
@@ -222,10 +317,10 @@ export default class EditEvent extends React.Component {
           <TouchableOpacity style={styles.dataView}
             onPress={() => this.setState({ isEndVisible: !this.state.isEndVisible })}
           >
-            <Text style={{ color: "#000", fontSize: 20 }}>Fim </Text>
+            <Text style={{ color: "#fff", fontSize: 20 }}>Fim </Text>
             {isEnabled ?
               <View>
-                <Text style={{ color: "#000", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('DD ' + '' + 'MMMM')}</Text>
+                <Text style={{ color: "#fff", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('DD ' + '' + 'MMMM')}</Text>
                 <DateTimePicker
                   isVisible={isEndVisible}
                   mode="date"
@@ -236,7 +331,7 @@ export default class EditEvent extends React.Component {
               </View>
               :
               <View>
-                <Text style={{ color: "#000", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm')}</Text>
+                <Text style={{ color: "#fff", fontSize: 15, marginEnd: '4%' }}> {Moment(endDate).format('DD ' + '' + 'MMMM' + ', ' + 'HH:mm')}</Text>
                 <DateTimePicker
                   isVisible={isEndVisible}
                   mode="datetime"
@@ -249,13 +344,13 @@ export default class EditEvent extends React.Component {
 
           </TouchableOpacity>
 
-
-
         </View>
-        <TouchableOpacity style={styles.dataView}
-          onPress={() => this.createEvent(value, description, location, Moment(startDate).format('YYYY-MM-DD'), endDate.toString())}>
-          <Text>Ola</Text>
-        </TouchableOpacity>
+        <View style={styles.createEventView}>
+          <TouchableOpacity style={styles.createEventBtn}>
+            <Button onPress={() => this.updateEvent(value, description, location, Moment(startDate).format('YYYY-MM-DD'), endDate.toString(), 'calendars')} 
+              title='Atualizar Evento' color='#FF8000'></Button>
+          </TouchableOpacity>
+        </View>
       </View>
 
     );

@@ -133,6 +133,7 @@ export default class CreateEvent extends React.Component {
       isEndVisible: false,
       calendarKey: props.route.params.calendarKey,
       username: '',
+      calendarType: props.route.params.calendarType,
     };
 
   }
@@ -159,14 +160,61 @@ export default class CreateEvent extends React.Component {
 
   createEvent = (title, desc, locat, sDate, eDate) => {
     if (title.length != 0 && desc.length != 0 && locat.length != 0) {
-      firebase.database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events').push().set({
+      const ref = firebase.database().ref().child('users').child(this.state.username).child(this.state.calendarType).child(this.state.calendarKey).child('events').push()
+      const key = ref.key;
+      ref.set({
         "title": title, "description": desc, "location": locat,
         "startDate": sDate, "endDate": eDate
-      });
-      this.props.navigation.reset({index:1, routes:[{name: 'Calendário'},{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey}}]});
-      //this.props.navigation.navigate('CalendárioTeste', {calendarKey: this.state.calendarKey});
+      }).then(this.createSharedEvent(title, desc, locat, sDate, eDate, key));
+      this.props.navigation.reset({index:1, routes:[{name: 'Calendário'},{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey, calendarType: this.state.calendarType}}]});
     } else {
       Alert.alert('Todos os campos têm de estar preenchidos.');
+    }
+  }
+
+  createSharedEvent = (title, desc, locat, sDate, eDate, key) => {
+    if(this.state.calendarType == 'calendars'){
+      firebase.database().ref().child('users').once('value', snapshot =>{
+        snapshot.forEach(snap => {
+          if(snap.key != this.state.username){
+            if(typeof snap.val().shareCalendars !== 'undefined'){
+                firebase.database().ref().child('users').child(snap.key).child('shareCalendars').child(this.state.calendarKey).child('events').child(key).set({
+                  "title": title, "description": desc, "location": locat,
+                  "startDate": sDate, "endDate": eDate
+                });
+            }
+          }
+        });
+      });
+    }
+
+    if(this.state.calendarType == 'shareCalendars'){
+      firebase.database().ref().child('users').once('value', snapshot =>{
+        snapshot.forEach(snap => {
+          if(snap.key != this.state.username){
+            if(typeof snap.val().calendars !== 'undefined'){
+              snap.forEach(s => {
+                if(s.key == 'calendars'){
+                  s.forEach(e => {
+                    if(e.key == this.state.calendarKey){
+                      firebase.database().ref().child('users').child(snap.key).child('calendars').child(this.state.calendarKey).child('events').child(key).set({
+                        "title": title, "description": desc, "location": locat,
+                        "startDate": sDate, "endDate": eDate
+                      });
+                    }
+                  });
+                }
+              });
+            }
+            if(typeof snap.val().shareCalendars !== 'undefined'){
+              firebase.database().ref().child('users').child(snap.key).child('shareCalendars').child(this.state.calendarKey).child('events').child(key).set({
+                "title": title, "description": desc, "location": locat,
+                "startDate": sDate, "endDate": eDate
+              });
+          }
+          }
+        });
+      });
     }
   }
 

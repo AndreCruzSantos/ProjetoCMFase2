@@ -38,7 +38,8 @@ export default class Calendar extends React.Component {
         this.state = {
             items: {},
             calendarKey: props.route.params.calendarKey,
-            username: ''
+            username: '',
+            calendarType: props.route.params.calendarType,
         };
 
     }
@@ -62,7 +63,7 @@ export default class Calendar extends React.Component {
             items: {}
         });
 
-        const ola = firebase.database().ref().child('users').child(this.state.username).child('calendars').child(this.state.calendarKey).child('events');
+        const ola = firebase.database().ref().child('users').child(this.state.username).child(this.state.calendarType).child(this.state.calendarKey).child('events');
         const teste = ola.on('value', snapshot => {
             snapshot.forEach(snap => {
                 const key = snap.val().startDate;
@@ -142,7 +143,7 @@ export default class Calendar extends React.Component {
                 />
 
                 <TouchableOpacity activeOpacity={0.7}
-                    onPress={() => this.props.navigation.navigate('Criar Evento', {calendarKey : this.state.calendarKey})}
+                    onPress={() => this.props.navigation.navigate('Criar Evento', {calendarKey : this.state.calendarKey, calendarType: this.state.calendarType})}
                     style={styles.addButton}>
                     <Image source={require('../images/add_white.png')}></Image>
                 </TouchableOpacity>
@@ -179,66 +180,11 @@ export default class Calendar extends React.Component {
         }, 1000);
     }
 
-
-    /*loadTeste() {
-        
-        const empty = {};
-        this.setState({
-            items: empty
-        });
-        console.log(this.state.items);
-        const ola = firebase.database().ref().child('events');
-        const teste = ola.on('value', snapshot => {
-            snapshot.forEach(snap => {
-                const key = snap.val().startDate;
-                if(!this.state.items[key]){
-                    this.state.items[key] = [];
-                    this.state.items[key].push({
-                        key: snap.key,
-                        title: snap.val().title,
-                        description: snap.val().description,
-                        location: snap.val().location,
-                        startDate: snap.val().startDate,
-                        endDate: snap.val().endDate
-                    });
-                }else{
-                    if(snap.val().startDate == key){
-   
-                                this.state.items[key].push({
-                                    key: snap.key,
-                                    title: snap.val().title,
-                                    description: snap.val().description,
-                                    location: snap.val().location,
-                                    startDate: snap.val().startDate,
-                                    endDate: snap.val().endDate
-                                });
-                            
-                    
-                        
-                    }
-                }
-                
-            });
-    
-            const newItems = {};
-            Object.keys(this.state.items).forEach(key => {
-                newItems[key] = this.state.items[key];
-            });
-            this.setState({
-                items: newItems,
-                ref: ola,
-                callB: teste,
-            });
-            //firebase.database().ref().child('events').off('value', teste);
-        });
-
-    }*/
-
     renderItem(item) {
         return (
             <TouchableOpacity
                 style={[styles.item]}
-                onPress={() => this.props.navigation.navigate('Página Evento', { eventKey: item.key, calendarKey: this.state.calendarKey })}
+                onPress={() => this.props.navigation.navigate('Página Evento', { eventKey: item.key, calendarKey: this.state.calendarKey, calendarType: this.state.calendarType })}
             >
                 <Text>{item.title}</Text>
             </TouchableOpacity>

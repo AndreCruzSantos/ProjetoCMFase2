@@ -183,9 +183,23 @@ export default class CalendarsScreen extends React.Component {
     }
 
     deleteCalendar = (key,string) => {
-        firebase.database().ref().child('users').child(this.state.username).child(string).child(key).remove().then(
-            this.getAllCalendars()
-        );
+        firebase.database().ref().child('users').child(this.state.username).child(string).child(key).remove()
+        .then(this.deleteShareCalendar(key,string))
+        .then(this.getAllCalendars);
+    }
+
+    deleteShareCalendar = (key, string) => {
+        if(string == 'calendars'){
+            firebase.database().ref().child('users').once('value', snapshot =>{
+                snapshot.forEach(snap => {
+                  if(snap.key != this.state.username){
+                    if(typeof snap.val().shareCalendars !== 'undefined'){
+                        firebase.database().ref().child('users').child(snap.key).child('shareCalendars').child(key).remove()
+                    }
+                  }
+                });
+              });
+        }
     }
 
     render() {
@@ -207,7 +221,7 @@ export default class CalendarsScreen extends React.Component {
                     {
                         array.map(elem => {
                             return(
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key } )}>    
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key, calendarType: 'calendars' } )}>    
                                     <View style={styles.item_btn} key = {elem.key}>
                                         <Text style={styles.item}>{elem.title}</Text>
                                         <View style={styles.btns}>
@@ -233,7 +247,7 @@ export default class CalendarsScreen extends React.Component {
                         copiedArray.map(elem => {
                             return(
                                 
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key } )}>    
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key, calendarType: 'copiedCalendars' } )}>    
                             <View style={styles.item_btn} key = {elem.key}>
                                 <Text style={styles.item}>{elem.title}</Text>
                                 <View style={styles.btns}>
@@ -252,7 +266,7 @@ export default class CalendarsScreen extends React.Component {
                     {
                         sharedArray.map(elem => {
                             return(  
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key } )}>    
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('CalendárioTeste',{ calendarKey: elem.key, calendarType: 'shareCalendars'} )}>    
                             <View style={styles.item_btn} key = {elem.key}>
                                 <Text style={styles.item}>{elem.title}</Text>
                                 <View style={styles.btns}>
