@@ -40,28 +40,43 @@ export default class Register extends React.Component {
       email: '',
       password: '',
       repPassword: '',
+      isChecked1 : false,
+      isChecked2 : false
     };
   }
 
   register = (name, mail, pass, repPass) => {
-    if (name.length != 0 && mail.length != 0 && pass.length != 0 && repPass != 0) {
+    if (name.length != 0 && mail.length != 0 && pass.length != 0 && repPass.length != 0) {
       if (pass == repPass) {
         firebase.database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
           if(!snapshot.exists()){
             firebase.auth().createUserWithEmailAndPassword(mail, pass).then(() => {
               firebase.database().ref().child('users').child(name).set({'username': name, 'email': mail});
-              this.props.navigation.navigate('Login');
+              this.props.navigation.navigate('LoginPage');
             });
           }else{
-            console.log('Existe');
+            Alert.alert("Já existe uma conta associada ao email e/ou nome introduzido(s)");
           }
         });
       }
+      else{
+        Alert.alert("As password não coincidem.");
+      }
+    }
+    else{
+      Alert.alert("Preencha todos os campos.");
     }
   }
 
+  setIsChecked1 = () => {
+    this.setState({isChecked1 : !this.state.isChecked1});
+  }
+  setIsChecked2 = () => {
+    this.setState({isChecked2 : !this.state.isChecked2});
+  }
+
   render() {
-    const { username, email, password, repPassword } = this.state;
+    const { username, email, password, repPassword, isChecked1, isChecked2 } = this.state;
     return (
       <View style={styles.background}>
         <Image source={require("../images/AgendYourself_Logo.png")} style={styles.logo}></Image>
@@ -76,21 +91,21 @@ export default class Register extends React.Component {
             onChangeText={(mail) => { this.setState((prevState) => ({ email: mail })) }}></TextInput>
         </View>
         <View style={styles.inputView}>
-          <Image source={require("../images/lock.png")} style={styles.image}></Image>
-          <TextInput style={styles.input} placeholder="Password"
-            onChangeText={(pass) => { this.setState((prevState) => ({ password: pass })) }} secureTextEntry={true} ></TextInput>
+        <Image source={require("../images/lock.png")} style={styles.image}></Image>
+          <TextInput style={styles.input} placeholder="Password" secureTextEntry={!isChecked1} onChangeText={(pass) => {this.setState((prevState) => ({password : pass}))}}></TextInput>
+          {isChecked1 ? <TouchableOpacity onPress={this.setIsChecked1}><Image style={styles.visibilityImage} source={require('../images/visibility.png')}></Image></TouchableOpacity> : <TouchableOpacity onPress={this.setIsChecked1}><Image style={styles.visibilityImage} source={require('../images/visibility_off.png')}></Image></TouchableOpacity>}
         </View>
         <View style={styles.inputView}>
-          <Image source={require("../images/lock.png")} style={styles.image}></Image>
-          <TextInput style={styles.input} placeholder="Repetir Password"
-            onChangeText={(passRep) => { this.setState((prevState) => ({ repPassword: passRep })) }} secureTextEntry={true} ></TextInput>
+        <Image source={require("../images/lock.png")} style={styles.image}></Image>
+          <TextInput style={styles.input} placeholder="Repetir Password" secureTextEntry={!isChecked2} onChangeText={(repPass) => {this.setState((prevState) => ({repPassword : repPass}))}}></TextInput>
+          {isChecked2 ? <TouchableOpacity onPress={this.setIsChecked2}><Image style={styles.visibilityImage} source={require('../images/visibility.png')}></Image></TouchableOpacity> : <TouchableOpacity onPress={this.setIsChecked2}><Image style={styles.visibilityImage} source={require('../images/visibility_off.png')}></Image></TouchableOpacity>}
         </View>
         <TouchableOpacity style={styles.signInBtn} onPress={() => this.register(username, email, password, repPassword)}>
           <Text style={styles.signInText}>
             Registe-se
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.registerBtn} onPress={() => this.props.navigation.navigate('Login')}>
+        <TouchableOpacity style={styles.registerBtn} onPress={() => this.props.navigation.navigate('LoginPage')}>
           <Text style={styles.registerTxt}>
             Já tem conta? Inicie sessão
           </Text>
@@ -157,6 +172,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   logo: {
+    marginTop: 50,
     width: 230,
     height: 230
   },
@@ -164,5 +180,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 17,
     fontWeight: 'bold'
+  },
+  
+  visibilityImage: {
+    marginRight: 12,
+    marginTop: 12
   }
 });

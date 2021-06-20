@@ -116,7 +116,7 @@ export default class EditEvent extends React.Component {
         "title": title, "description": desc, "location": locat,
         "startDate": sDate, "endDate": eDate
       });
-      this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste'}]});
+      this.props.navigation.reset({index:0, routes:[{name: 'CalendarPage'}]});
     } else {
       Alert.alert('Todos os campos têm de estar preenchidos.');
     }

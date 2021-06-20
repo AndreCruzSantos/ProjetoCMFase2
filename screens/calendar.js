@@ -129,7 +129,7 @@ export default class Calendar extends React.Component {
                     rowHasChanged={this.rowHasChanged.bind(this)}
 
                     theme={{
-                        selectedDayBackgroundColor: 'orange',
+                        selectedDayBackgroundColor: '#FF8000',
                         dotColor: 'black',
                         selectedDotColor: 'white',
                         backgroundColor: '#2B2A2A'
@@ -137,7 +137,7 @@ export default class Calendar extends React.Component {
                 />
 
                 <TouchableOpacity activeOpacity={0.7}
-                    onPress={() => this.props.navigation.navigate('Criar Evento', {calendarKey : this.state.calendarKey})}
+                    onPress={() => this.props.navigation.navigate('CreateEventPage', {calendarKey : this.state.calendarKey})}
                     style={styles.addButton}>
                     <Image source={require('../images/add_white.png')}></Image>
                 </TouchableOpacity>
@@ -233,7 +233,7 @@ export default class Calendar extends React.Component {
         return (
             <TouchableOpacity
                 style={[styles.item]}
-                onPress={() => this.props.navigation.navigate('Página Evento', { eventKey: item.key, calendarKey: this.state.calendarKey })}
+                onPress={() => this.props.navigation.navigate('EventPage', { eventKey: item.key, calendarKey: this.state.calendarKey })}
             >
                 <Text>{item.title}</Text>
             </TouchableOpacity>
@@ -282,7 +282,9 @@ const styles = StyleSheet.create({
         right: 30,
         bottom: 30,
         borderRadius: 100,
-        backgroundColor: 'orange',
+        borderWidth: 1,
+        borderColor: '#FFFFFF',
+        backgroundColor: '#FF8000',
     }
 });
 

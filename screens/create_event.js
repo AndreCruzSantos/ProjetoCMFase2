@@ -170,7 +170,7 @@ export default class CreateEvent extends React.Component {
         "title": title, "description": desc, "location": locat,
         "startDate": sDate, "endDate": eDate
       });
-      this.props.navigation.reset({index:0, routes:[{name: 'CalendárioTeste', params: {calendarKey: this.state.calendarKey}}]});
+      this.props.navigation.reset({index:0, routes:[{name: 'CalendarPage', params: {calendarKey: this.state.calendarKey}}]});
       //this.props.navigation.navigate('CalendárioTeste', {calendarKey: this.state.calendarKey});
     } else {
       Alert.alert('Todos os campos têm de estar preenchidos.');
@@ -230,7 +230,7 @@ export default class CreateEvent extends React.Component {
               fontSize: 20,
               color: '#fff'
             }}>Escolher localização no mapa: </Text>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Map')}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('MapPage')}>
               <Image style={styles.image} source={require('../images/map_white.png')}></Image>
             </TouchableOpacity>
           </View>

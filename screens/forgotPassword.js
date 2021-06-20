@@ -20,7 +20,7 @@ export default class ForgotPassword extends React.Component {
     forgotPassword = (email) => {
         auth().sendPasswordResetEmail(email).then(() => {
             alert('Por favor verifique o seu email!');
-            this.props.navigation.navigate('Login');
+            this.props.navigation.navigate('LoginPage');
         })
     }
 
@@ -35,7 +35,12 @@ export default class ForgotPassword extends React.Component {
                 </View>
                 <TouchableOpacity style={styles.recoverPassword} onPress={() => this.forgotPassword(email)}>
                     <Text style={styles.text}>
-                        Enviar Email
+                        Enviar email
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.loginBtn} onPress={() => this.props.navigation.navigate('LoginPage')}>
+                    <Text style={styles.loginTxt}>
+                        Inicie sessão
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -68,6 +73,7 @@ const styles = StyleSheet.create({
       fontSize: 16,
     },
     logo: {
+      marginTop: 100,
       width: 230,
       height: 230
     },
@@ -85,5 +91,21 @@ const styles = StyleSheet.create({
       fontSize: 17,
       fontWeight: 'bold',
       color: 'black'
-    }
+    },
+    loginBtn: {
+        width: '70%',
+        height: 40,
+        borderWidth: 1.5,
+        borderColor: '#FF8000',
+        backgroundColor: '#2B2A2A',
+        marginTop: 23,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center'
+      },
+      loginTxt: {
+        color: 'white',
+        fontSize: 17,
+        fontWeight: 'bold'
+      },
 });

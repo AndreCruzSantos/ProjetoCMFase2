@@ -137,7 +137,7 @@ export default class EventPage extends React.Component {
         title: 'OLÁ',
         headerRight: (
             <View style={styles.icons}>
-        <TouchableOpacity style={{ right: '45%' }} onPress={() => navigation.navigate('Editar Evento')}>
+        <TouchableOpacity style={{ right: '45%' }} onPress={() => navigation.navigate('EditEventPage')}>
             <Image style={{ height: 30, width: 30 }} source={require('../images/edit.png')}></Image>
         </TouchableOpacity>
         <TouchableOpacity style={{ right: '35%' }} onPress={() => showConfirmDialog()}>

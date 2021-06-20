@@ -7,7 +7,7 @@ import Geolocation from "react-native-geolocation-service";
 import { NavigationContainer } from '@react-navigation/native';
 
 
-export default class MapScreen extends React.Component {
+export default class SelectMap extends React.Component {
     constructor(props) {
         super(props);
          this.state = {
@@ -81,7 +81,7 @@ export default class MapScreen extends React.Component {
                     <Button 
                       title="Selecionar Localização" 
                       color="#FF8000"
-                      onPress={() => this.props.navigation.navigate('Criar Evento', {lat: this.state.latitude, long: this.state.longitude})}
+                      onPress={() => this.props.navigation.navigate('CreateEventPage', {lat: this.state.latitude, long: this.state.longitude})}
                     ></Button>
                     : null 
                   }
