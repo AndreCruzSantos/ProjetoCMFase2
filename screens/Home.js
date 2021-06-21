@@ -36,7 +36,7 @@ export default class Home extends React.Component {
     promptCreateCalendar = () => {
         prompt('Criar Calendário', 'Insira o nome do calendário a criar.',
             [
-                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                { text: 'Cancelar', style: 'cancel' },
                 { text: 'OK', onPress: title => this.createCalendar(title), style: 'ok' },
             ],
             {
@@ -50,7 +50,7 @@ export default class Home extends React.Component {
     promptEditCalendar = (key) => {
         prompt('Editar Calendário','Insira o novo nome do calendário.',
             [
-                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'Cancelar', style: 'cancel'},
                 {text: 'OK', onPress: text => this.editCalendar(key,text),style: 'ok'}
             ],
             {
@@ -75,12 +75,36 @@ export default class Home extends React.Component {
         ).then(this.getAllCalendars());
     }
 
-    promptChooseUser = (key) => {
-        prompt('Utilizador a partilhar', 'Escolha o utilizador a partilhar o calendário!', 
+    promptChooseShare = (key) => {
+        const title = 'Como pretende partilhar?';
+        const message = 'Escolha a forma de partilhar um calendário!';
+        const buttons = [
+            { text: 'Cancelar', type: 'cancel' },
+            { text: 'Cópia', onPress: () => this.promptCopy(key) },
+            { text: 'Compartilhar', onPress: () => this.promptShare(key) }
+        ];
+        Alert.alert(title, message, buttons);
+    }
+
+    promptCopy = (key) => {
+        prompt('Introduza um nome', 'Introduza o nome do utilizador que recebe a cópia!', 
             [
-                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: 'Cópia', onPress: name => this.copyCalendar(key,name), style: 'ok'},
-                {text: 'Compartilhar', onPress: username => this.shareCalendar(key,username), style: 'ok'}
+                {text: 'Cancelar', type: 'cancel'},
+                {text: 'OK', onPress: username => this.copyCalendar(key, username)},
+            ],
+            {
+                type: 'plain-text',
+                cancelable: false,
+                placeholder: 'Escreva aqui...'
+            }
+        );
+    }
+
+    promptShare = (key) => {
+        prompt('Introduza um nome', 'Introduza o nome do utilizador para partilhar o calendário!', 
+            [
+                {text: 'Cancelar', type: 'cancel'},
+                {text: 'OK', onPress: username => this.shareCalendar(key, username)},
             ],
             {
                 type: 'plain-text',
@@ -92,7 +116,6 @@ export default class Home extends React.Component {
 
     copyCalendar = (key,name) => {
         var copyUsername = '';
-        console.log(name);
         if(name.length != 0){
             firebase.database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
                 if(snapshot.exists()){
@@ -111,7 +134,6 @@ export default class Home extends React.Component {
 
     shareCalendar = (key,name) => {
         var copyUsername = '';
-        console.log(name);
         if(name.length != 0){
             firebase.database().ref().child('users').orderByChild('username').equalTo(name).once('value').then(snapshot =>{
                 if(snapshot.exists()){
@@ -232,7 +254,7 @@ export default class Home extends React.Component {
                                             <TouchableOpacity onPress={() => this.deleteCalendar(elem.key,'calendars')}>
                                                 <Image style={styles.btnsmall} source={require('../images/trash_grey.png')}></Image>
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => this.promptChooseUser(elem.key)}>
+                                            <TouchableOpacity onPress={() => this.promptChooseShare(elem.key)}>
                                                 <Image style={styles.btnsmall} source={require('../images/share_grey.png')}></Image>
                                             </TouchableOpacity>
                                         </View>
@@ -244,7 +266,7 @@ export default class Home extends React.Component {
                 </View>
                 <View style={styles.calendarType}>
                     <View style={styles.category_btn}>
-                        <Text style={styles.category}>Calendários Partilhados</Text>
+                        <Text style={styles.category}>Calendários Copiados</Text>
                     </View>
                         {
                         copiedArray.map(elem => {
@@ -324,15 +346,16 @@ var styles = {
         flexDirection: 'row'
     },
     btnbig: {
-        height: 45,
-        width: 45,
+        height: 40,
+        width: 40,
         resizeMode: 'contain',
         flexDirection: 'row'
     },
     btnsmall: {
         marginRight: 15,
-        height: 35,
-        width: 35,
+        marginTop: 3,
+        height: 30,
+        width: 30,
         resizeMode: 'contain',
         flexDirection: 'row',
     },

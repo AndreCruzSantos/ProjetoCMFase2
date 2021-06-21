@@ -177,13 +177,13 @@ export default class UserProfile extends React.Component {
                         </Text>
                     </View>
                     <TouchableOpacity style={styles.resetView} onPress={() => this.props.navigation.navigate('ChangePasswordPage')}>
-                        <Text style={styles.resetText}>Reset Password</Text>
+                        <Text style={styles.resetText}>Alterar password</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.deleteView} onPress={() => this.deleteAccount()}>
-                        <Text style={styles.deleteText}>Delete Account</Text>
+                        <Text style={styles.deleteText}>Apagar conta</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.logoutView} onPress={() => this.logout()}>
-                        <Text style={styles.logoutText}>Logout</Text>
+                        <Text style={styles.logoutText}>Terminar sessão</Text>
                     </TouchableOpacity>
                 </ScrollView>
             </View>
